@@ -1,0 +1,63 @@
+.ant-carousel .slick-slide {
+  align: center;
+  height: 500px;
+  line-height: 160px;
+  background: #364d79;
+  overflow: hidden;
+}
+
+.ant-carousel .slick-slide h3 {
+  color: #fff;
+}
+
+img {
+    height: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.bulk {
+    height: 350px;
+    text-align: center;
+    display: block;
+}
+
+.blue {
+    background-color: #364d79;
+}
+
+.white {
+    background-color: #fff;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.contained {
+    width: 50%;
+    height: 100%;
+    padding: 70px 0px;
+}
+
+.contained img {
+    border-radius: 50%;
+    height: 100%;
+}
+
+.white-txt h1 {
+    color: #fff;
+}
+
+.white-txt h3 {
+    color: #fff;
+}
+
+.white-txt h4 {
+    color: #fff;
+}
