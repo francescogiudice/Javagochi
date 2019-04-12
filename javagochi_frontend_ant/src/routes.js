@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom';
 
 import Intro from './components/Intro';
 import ProfileView from './containers/ProfileView';
+import ChangeProfileView from './containers/ChangeProfileView';
 import JavagochiOwnedList from './containers/JavagochiOwnedListView';
 import OwnedItemsList from './containers/OwnedItemsView';
 import ItemOwnedDetailView from './containers/ItemOwnedDetailView';
@@ -18,6 +19,7 @@ const BaseRouter = () => (
     <div>
         <Route exact path='/' component={Intro} />
         <Route exact path='/profile' component={ProfileView} />
+        <Route exact path='/profile/change' component={ChangeProfileView} />
         <Route exact path='/market' component={JavagochiList} />
         <Route exact path='/itemsmarket' component={ItemList} />
         <Route exact path='/myjavagochis' component={JavagochiOwnedList} />

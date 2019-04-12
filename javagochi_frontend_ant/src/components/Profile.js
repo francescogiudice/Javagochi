@@ -1,5 +1,6 @@
 import React from 'react';
-import { Typography , Progress, Card, Row, Col, List, Avatar } from 'antd';
+import { Typography , Progress, Card, Row, Col, List, Avatar, Button } from 'antd';
+import { Link } from 'react-router-dom';
 
 const { Title } = Typography;
 
@@ -67,7 +68,7 @@ const Profile = (props) => {
                           )}
                         />
                     </Col>
-                    
+
                     <Col span={8}>
                         <List
                           itemLayout="horizontal"
@@ -91,6 +92,8 @@ const Profile = (props) => {
                         />
                     </Col>
                 </Row>
+
+                <Button type="primary" style={{margin: 20}}><Link to="/profile/change">Change info</Link></Button>
             </div>
     )
 }

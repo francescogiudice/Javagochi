@@ -80,7 +80,7 @@ class RegistrationForm extends React.Component {
                 validator: this.validateToNextPassword,
                 }],
                 })(
-                    <Input type="password" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
+                    <Input type="password" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Password" />
                 )}
             </Form.Item>
 
@@ -92,7 +92,7 @@ class RegistrationForm extends React.Component {
                 validator: this.compareToFirstPassword,
                 }],
                 })(
-                    <Input type="password" onBlur={this.handleConfirmBlur} prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Repeat password"/>
+                    <Input type="password" onBlur={this.handleConfirmBlur} prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Repeat password"/>
                 )}
             </Form.Item>
 
