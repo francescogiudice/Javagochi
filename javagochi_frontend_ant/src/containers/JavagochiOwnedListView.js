@@ -1,7 +1,9 @@
 import React from 'react';
 import axios from 'axios';
+import { Input } from 'antd';
 import JcOwnedCells from '../components/JcOwnedCells';
-import SearchField from "react-search-field";
+
+const Search = Input.Search;
 
 class JavagochiOwnedList extends React.Component {
 
@@ -24,17 +26,17 @@ class JavagochiOwnedList extends React.Component {
     render() {
         return (
             <div>
-                <SearchField
+                <Search
                   placeholder="Search..."
 
-                  onChange={(value, event) => {
+                  onChange={(e) => {
                       this.setState({
                           searched: []
                       });
                       var interesting = [];
 
                       this.state.javagochis.forEach(function (javagochi) {
-                          if(javagochi.race.race.includes(value) || javagochi.nickname.includes(value)) {
+                          if(javagochi.race.race.includes(e.target.value) || javagochi.nickname.includes(e.target.value)) {
                               interesting.push(javagochi);
                           }
                       });
@@ -44,7 +46,9 @@ class JavagochiOwnedList extends React.Component {
                       })
                   }}
 
-                  classNames="test-class"
+                  className="test-class"
+
+                  style={{ marginBottom: 15, width: 300 }}
                 />
                 <JcOwnedCells data={this.state.searched} />
             </div>

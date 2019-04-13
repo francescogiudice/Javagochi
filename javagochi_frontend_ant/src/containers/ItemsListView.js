@@ -1,9 +1,11 @@
 import React from 'react';
 import axios from 'axios';
 import ItemCells from '../components/ItemCells';
-import SearchField from "react-search-field";
+import { Input } from 'antd';
 
 import '../styles/JcList.css';
+
+const Search = Input.Search;
 
 class ItemList extends React.Component {
 
@@ -25,17 +27,17 @@ class ItemList extends React.Component {
     render() {
         return (
             <div>
-                <SearchField
+                <Search
                   placeholder="Search..."
 
-                  onChange={(value, event) => {
+                  onChange={(e) => {
                       this.setState({
                           searched: []
                       });
                       var interesting = [];
 
                       this.state.items.forEach(function (item) {
-                          if(item.name.includes(value)) {
+                          if(item.name.includes(e.target.value)) {
                               interesting.push(item);
                           }
                       });
@@ -45,7 +47,9 @@ class ItemList extends React.Component {
                       })
                   }}
 
-                  classNames="test-class"
+                  className="test-class"
+
+                  style={{ marginBottom: 15, width: 300 }}
                 />
                 <ItemCells data={this.state.searched} />
             </div>

@@ -1,7 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import ItemOwnedCells from '../components/ItemOwnedCells';
-import SearchField from "react-search-field";
+import { Input } from 'antd';
+
+const Search = Input.Search;
 
 class OwnedItemsList extends React.Component {
 
@@ -24,17 +26,17 @@ class OwnedItemsList extends React.Component {
     render() {
         return (
             <div>
-                <SearchField
+                <Search
                   placeholder="Search..."
 
-                  onChange={(value, event) => {
+                  onChange={(e) => {
                       this.setState({
                           searched: []
                       });
                       var interesting = [];
 
                       this.state.items.forEach(function (item) {
-                          if(item.item.name.includes(value)) {
+                          if(item.item.name.includes(e.target.value)) {
                               interesting.push(item);
                           }
                       });
@@ -44,7 +46,9 @@ class OwnedItemsList extends React.Component {
                       })
                   }}
 
-                  classNames="test-class"
+                  className="test-class"
+
+                  style={{ marginBottom: 15, width: 300 }}
                 />
                 <ItemOwnedCells data={this.state.searched} />
             </div>

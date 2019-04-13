@@ -1,9 +1,11 @@
 import React from 'react';
 import axios from 'axios';
 import JcCells from '../components/JcCell';
-import SearchField from "react-search-field";
+import { Input } from 'antd';
 
 import '../styles/JcList.css';
+
+const Search = Input.Search;
 
 class JavagochiList extends React.Component {
 
@@ -25,17 +27,17 @@ class JavagochiList extends React.Component {
     render() {
         return (
             <div>
-                <SearchField
+                <Search
                   placeholder="Search..."
 
-                  onChange={(value, event) => {
+                  onChange={(e) => {
                       this.setState({
                           searched: []
                       });
                       var interesting = [];
 
                       this.state.javagochis.forEach(function (javagochi) {
-                          if(javagochi.race.includes(value)) {
+                          if(javagochi.race.includes(e.target.value)) {
                               interesting.push(javagochi);
                           }
                       });
@@ -45,7 +47,9 @@ class JavagochiList extends React.Component {
                       })
                   }}
 
-                  classNames="test-class"
+                  className="test-class"
+
+                  style={{ marginBottom: 15, width: 300 }}
                 />
                 <JcCells data={this.state.searched} />
             </div>
