@@ -1,12 +1,35 @@
 import React from 'react';
 import axios from 'axios';
-import { Typography , Progress, Card, Row, Col, Button, Form, Input } from 'antd';
+import { Typography , Progress, Card, Row, Col, Button, Form, Input, Modal } from 'antd';
 import { Link } from 'react-router-dom';
 
 const { Meta } = Card;
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 class JcDetail extends React.Component {
+
+    state = {
+      popupVisible: false,
+      message: ""
+    }
+
+    showModal = (e) => {
+      this.setState({
+        popupVisible: true
+      });
+    }
+
+    handleOk = (e) => {
+      this.setState({
+        popupVisible: false
+      });
+    }
+
+    handleCancel = (e) => {
+      this.setState({
+        popupVisible: false
+      })
+    }
 
     handleBuy = (e) => {
         e.preventDefault();
@@ -15,8 +38,21 @@ class JcDetail extends React.Component {
             race: e.target[1].value,
             nickname: e.target[2].value
         })
+        .then((res) => {
+          console.log(res);
+          this.setState({
+            message: res.data
+          });
+          this.showModal();
+        })
         .catch((err) => {
-            console.log(err);
+          console.log(err.response);
+          if(err.response.data !== undefined) {
+            this.setState({
+              message: err.response.data
+            });
+            this.showModal();
+          }
         });
     }
 
@@ -25,6 +61,16 @@ class JcDetail extends React.Component {
         return (
 
             <div style={{ padding: '30px' }}>
+
+                <Modal
+                  title="The page says:"
+                  visible={this.state.popupVisible}
+                  onOk={this.handleOk}
+                  onCancel={this.handleCancel}
+                >
+                  <Text>{this.state.message}</Text>
+                </Modal>
+
                 <Row gutter={16}>
                     <Col span={8}>
                         <Title>{javagochi.race}</Title>
