@@ -75,8 +75,30 @@ export const authSignup = (username, email, password1, password2) => {
             const expirationDate = new Date(new Date().getTime() + 3600 * 24 * 1000); //Expiration date 1 day after
             localStorage.setItem('token', token);
             localStorage.setItem('expirationDate', expirationDate);
+            localStorage.setItem('username', username);
             dispatch(authSuccess(token));
             dispatch(checkAuthTimeout(3600 * 24));
+        })
+        .catch(err => {
+            dispatch(authFail(err))
+        })
+    }
+}
+
+export const authChangeProfile = (old_username, new_username, new_email, new_password) => {
+    return dispatch => {
+        if(new_password === undefined) {
+            new_password = "";
+        }
+        console.log(new_password);
+        dispatch(authStart());
+        axios.patch(`http://localhost:8000/api/users/${old_username}/change/`, {
+            username: new_username,
+            email: new_email,
+            password: new_password
+        })
+        .then(res => {
+            localStorage.setItem('username', new_username);
         })
         .catch(err => {
             dispatch(authFail(err))
