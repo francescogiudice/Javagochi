@@ -57,7 +57,8 @@ class JcDetail extends React.Component {
     }
 
     render() {
-        const javagochi = this.props.data;
+        const javagochi = this.props.data.javagochi;
+        const user = this.props.data.user;
         return (
 
             <div style={{ padding: '30px' }}>
@@ -103,7 +104,9 @@ class JcDetail extends React.Component {
 
 
                             <p>{"Min. user level: " + javagochi.min_user_level}</p>
-                            <p>{"Current level: WIP"}</p>
+                            <p>{ user.username + " current level: " + user.level}</p>
+
+                            <p>{ user.username + " current coins: " + user.coins}</p>
                         </Card>
                     </Col>
                 </Row>
