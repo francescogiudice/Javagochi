@@ -9,56 +9,75 @@ const { Title, Text } = Typography;
 class JcDetail extends React.Component {
 
     state = {
-      popupVisible: false,
-      message: ""
+        user: {},
+        popupVisible: false,
+        message: ""
     }
 
     showModal = (e) => {
-      this.setState({
-        popupVisible: true
-      });
+        this.setState({
+            popupVisible: true
+        });
     }
 
     handleOk = (e) => {
-      this.setState({
-        popupVisible: false
-      });
+        this.setState({
+            popupVisible: false
+        });
     }
 
     handleCancel = (e) => {
-      this.setState({
-        popupVisible: false
-      })
+        this.setState({
+            popupVisible: false
+        });
     }
 
     handleBuy = (e) => {
         e.preventDefault();
         axios.post("http://localhost:8000/api/javagochi/buy/", {
-            user: e.target[0].value,
-            race: e.target[1].value,
-            nickname: e.target[2].value
+          user: e.target[0].value,
+          race: e.target[1].value,
+          nickname: e.target[2].value
         })
         .then((res) => {
-          console.log(res);
-          this.setState({
-            message: res.data
-          });
-          this.showModal();
-        })
-        .catch((err) => {
-          console.log(err.response);
-          if(err.response.data !== undefined) {
+            console.log(res);
             this.setState({
-              message: err.response.data
+                message: res.data
             });
             this.showModal();
-          }
+        })
+        .catch((err) => {
+            console.log(err.response);
+            if(err.response.data !== undefined) {
+                this.setState({
+                    message: err.response.data
+                });
+                this.showModal();
+            }
         });
+    }
+
+    componentDidMount() {
+        const user = localStorage.getItem('username');
+
+        if(user) {
+            axios.get(`http://localhost:8000/api/users/${user}/info/`)
+            .then((res) => {
+                this.setState({
+                    user: res.data
+                });
+            });
+        }
+        else {
+            this.setState({
+                user: undefined
+            })
+        }
     }
 
     render() {
         const javagochi = this.props.data.javagochi;
-        const user = this.props.data.user;
+
         return (
 
             <div style={{ padding: '30px' }}>
@@ -102,17 +121,25 @@ class JcDetail extends React.Component {
                             <p>{"Cold: 0/" + javagochi.max_cold}</p>
                             <Progress percent={0} size="small" showInfo={false} />
 
-
                             <p>{"Min. user level: " + javagochi.min_user_level}</p>
-                            <p>{ user.username + " current level: " + user.level}</p>
 
-                            <p>{ user.username + " current coins: " + user.coins}</p>
+                            {
+                                this.state.user === undefined ?
+                                    <div>
+                                        <p></p>
+                                    </div>
+                                :
+                                    <div>
+                                        <p>{"Your level: " + this.state.user.level}</p>
+                                        <p>{"Your coins: " + this.state.user.coins}</p>
+                                    </div>
+                            }
                         </Card>
                     </Col>
                 </Row>
 
                 {
-                    localStorage.getItem('username') !== undefined ?
+                    localStorage.getItem('username') !== null ?
                         <div>
                             <Form onSubmit={this.handleBuy}>
                                 <input type="hidden" id="user" name="user" value={localStorage.getItem('username')} />
