@@ -16,7 +16,7 @@ class ProfileView extends React.Component {
     }
 
     componentDidMount() {
-        const user = localStorage.getItem('username');
+        const user = this.props.match.params.username;
         if(user != null) {
             axios.all([
                 axios.get(`http://localhost:8000/api/users/${user}/info/`),
