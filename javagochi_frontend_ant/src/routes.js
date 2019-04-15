@@ -13,6 +13,9 @@ import JavagochiList from './containers/JavagochiListView';
 import ItemList from './containers/ItemsListView';
 import JavagochiDetail from './containers/JavagochiDetailView';
 import ItDetail from './containers/ItemDetailView';
+import TradeOffersView from './containers/TradeOffersView';
+import TradeOfferDetail from './containers/TradeOfferDetailView';
+import UserTradesView from './containers/UserTradesView';
 import WrappedNormalLoginForm from './containers/Login';
 import Signup from './containers/Signup';
 
@@ -30,6 +33,9 @@ const BaseRouter = () => (
         <Route exact path='/myitems' component={OwnedItemsList} />
         <Route exact path='/myitems/:id/' component={ItemOwnedDetailView} />
         <Route exact path='/itemdetail/:itemName/' component={ItDetail} />
+        <Route exact path='/trades' component={TradeOffersView} />
+        <Route exact path='/trades/:tradeId/' component={TradeOfferDetail} />
+        <Route exact path='/mytrades/' component={UserTradesView} />
         <Route exact path='/login/' component={WrappedNormalLoginForm} />
         <Route exact path='/signup/' component={Signup} />
     </div>

@@ -77,6 +77,7 @@ class JcDetail extends React.Component {
 
     render() {
         const javagochi = this.props.data.javagochi;
+        console.log(this.props.data);
 
         return (
 
