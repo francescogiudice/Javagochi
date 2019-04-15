@@ -82,7 +82,7 @@ class JcOwnedDetail extends React.Component {
                                                         user: localStorage.getItem('username')
                                                     })
                                                     .then((res) => {
-                                                        console.log(res);
+                                                        console.log(res.data);
                                                         this.props.onUpdate();
                                                     })
                                                     .catch((err) => {

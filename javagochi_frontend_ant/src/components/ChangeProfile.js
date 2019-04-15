@@ -1,6 +1,5 @@
 import React from 'react';
 import { Typography, Form, Input, Button, Icon } from 'antd';
-import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../store/actions/auth';
 import { withRouter } from 'react-router-dom';

@@ -21,7 +21,7 @@ const BaseRouter = () => (
         <Route exact path='/' component={Intro} />
         <Route exact path='/profile/:username/' component={ProfileView} />
         <Route exact path='/users/' component={UserListView} />
-        <Route exact path='/profile/change' component={ChangeProfileView} />  // TODO change this
+        <Route exact path='/profile/change' component={ChangeProfileView} />
         <Route exact path='/market' component={JavagochiList} />
         <Route exact path='/itemsmarket' component={ItemList} />
         <Route exact path='/myjavagochis' component={JavagochiOwnedList} />
