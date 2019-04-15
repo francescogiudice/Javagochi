@@ -49,8 +49,6 @@ class JavagochiOwnedDetail extends React.Component {
             axios.get(`http://localhost:8000/api/users/${user}/items/`)
         ])
         .then(axios.spread((jcRes, itemRes) => {
-            console.log(jcRes.data);
-            console.log(itemRes.data);
             this.setState({
                 javagochi: jcRes.data,
                 items: itemRes.data

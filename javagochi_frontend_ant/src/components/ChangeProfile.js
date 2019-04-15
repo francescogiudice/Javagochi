@@ -51,7 +51,6 @@ class ChangeProfileForm extends React.Component {
     render() {
         const user = this.props.data.user;
         const { getFieldDecorator } = this.props.form;
-        console.log(user);
 
         return (
             <div>

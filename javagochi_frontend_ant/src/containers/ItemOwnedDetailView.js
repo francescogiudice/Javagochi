@@ -11,7 +11,7 @@ class ItemOwnedDetailView extends React.Component {
 
     componentDidMount() {
         const id = this.props.match.params.id;
-        console.log("Loading item");
+        
         axios.get(`http://localhost:8000/api/items/owned/${id}/`)
             .then(res => {
                 this.setState({

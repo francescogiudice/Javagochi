@@ -65,9 +65,8 @@ class ItemDetail extends React.Component {
                             <Form onSubmit={this.handleBuy}>
                                 <input type="hidden" id="user" name="user" value={localStorage.getItem('username')} />
                                 <input type="hidden" id="race" name="race" value={item.name} />
-                                <InputNumber min={1} max={99} defaultValue={1} onChange={this.increaseAmount} />
-                                <Text>Total: {item.cost * this.state.buying} coins</Text>
-                                <Button type="primary" htmlType="submit" style={{marginRight: '10px'}}>Purchase</Button>
+                                <InputNumber min={1} max={99} defaultValue={1} onChange={this.increaseAmount} style={{ width: 85, marginRight: 15, marginBottom: 15 }} />
+                                <Button type="primary" htmlType="submit" style={{marginLeft: 10 }}>{"Purchase (" + item.cost * this.state.buying + " coins)"}</Button>
                             </Form>
                         </div>
                     :

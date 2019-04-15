@@ -1,7 +1,9 @@
 import '../styles/JcOwnedDetail.css';
 import React from 'react'
 import axios from 'axios';
-import { Typography, Progress, Card, Row, Col, Spin, List, Avatar } from 'antd';
+import { Typography, Spin, List, Avatar } from 'antd';
+
+import JavagochiOwned from './JavagochiOwned';
 
 const { Title } = Typography;
 
@@ -27,45 +29,7 @@ class JcOwnedDetail extends React.Component {
                             </div>
                         :
                             <div>
-                                <Row gutter={16}>
-                                    <Col span={8}>
-                                        <Title>{javagochi.nickname + ", " + javagochi.race.race}</Title>
-                                        <Card
-                                            bordered={false}
-                                            cover={<img alt="example" src={javagochi.race.image} />}
-                                        >
-                                        </Card>
-                                    </Col>
-
-                                    <Col span={8}>
-                                        <Card
-                                            title="Statistics"
-                                            bordered={false}
-                                        >
-                                            <Progress percent={(100 * javagochi.current_health) / javagochi.race.max_health} size="small" showInfo={false} />
-                                            <p>{"Health: " + javagochi.current_health + "/" + javagochi.race.max_health}</p>
-
-                                            <Progress percent={(100 * javagochi.current_age) / javagochi.race.max_age} size="small" showInfo={false} />
-                                            <p>{"Age: " + javagochi.current_age}</p>
-
-                                            <Progress percent={(100 * javagochi.current_hunger) / javagochi.race.max_hunger} size="small" showInfo={false} />
-                                            <p>{"Hunger: " + javagochi.current_hunger + "/" + javagochi.race.max_hunger}</p>
-
-                                            <Progress percent={(100 * javagochi.current_hot) / javagochi.race.max_hot} size="small" showInfo={false} />
-                                            <p>{"Hot: " + javagochi.current_hot + "/" + javagochi.race.max_hot}</p>
-
-                                            <Progress percent={(100 * javagochi.current_cold) / javagochi.race.max_cold} size="small" showInfo={false} />
-                                            <p>{"Cold: " + javagochi.current_cold + "/" + javagochi.race.max_cold}</p>
-
-                                            <br/>
-
-                                            <p>{"Level: " + javagochi.current_level}</p>
-
-                                            <Progress type="circle" percent={(100 * javagochi.current_experience) / next_level.exp_for_next_level} size="small" showInfo={false} />
-                                            <p>{"Experience: " + javagochi.current_experience + "/" + next_level.exp_for_next_level}</p>
-                                        </Card>
-                                    </Col>
-                                </Row>
+                                <JavagochiOwned jc={javagochi} exp={next_level}/>
 
                                 <div>
                                     <List
@@ -82,11 +46,9 @@ class JcOwnedDetail extends React.Component {
                                                         user: localStorage.getItem('username')
                                                     })
                                                     .then((res) => {
-                                                        console.log(res.data);
                                                         this.props.onUpdate();
                                                     })
                                                     .catch((err) => {
-                                                        console.log(err);
                                                     });
                                                 }}>
                                                     <List.Item.Meta

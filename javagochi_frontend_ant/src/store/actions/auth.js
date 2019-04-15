@@ -90,7 +90,6 @@ export const authChangeProfile = (old_username, new_username, new_email, new_pas
         if(new_password === undefined) {
             new_password = "";
         }
-        console.log(new_password);
         dispatch(authStart());
         axios.patch(`http://localhost:8000/api/users/${old_username}/change/`, {
             username: new_username,
