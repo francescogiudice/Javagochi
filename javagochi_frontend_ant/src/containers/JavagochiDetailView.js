@@ -115,10 +115,10 @@ class JavagochiDetail extends React.Component {
 
                             <div>
                                 <Form onSubmit={this.handleBuy}>
-                                <input type="hidden" id="user" name="user" value={localStorage.getItem('username')} />
-                                <input type="hidden" id="race" name="race" value={javagochi.race} />
-                                <Input style={{ color: 'rgba(0,0,0,.25)', width: 300, marginRight: 15, marginBottom: 15 }} placeholder="Nickname" />
-                                <Button type="primary" htmlType="submit">Purchase</Button>
+                                    <input type="hidden" id="user" name="user" value={localStorage.getItem('username')} />
+                                    <input type="hidden" id="race" name="race" value={javagochi.race} />
+                                    <Input style={{ color: 'rgba(0,0,0,.25)', width: 300, marginRight: 15, marginBottom: 15 }} placeholder="Nickname" />
+                                    <Button type="primary" htmlType="submit">Purchase</Button>
                                 </Form>
                             </div>
                         </div>

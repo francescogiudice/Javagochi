@@ -1,11 +1,14 @@
 import React from 'react';
 import axios from 'axios';
-import { List, Avatar } from 'antd';
+import { Typography, List, Avatar, Form, Button, Select, Modal } from 'antd';
 
 import JavagochiOwned from '../components/JavagochiOwned';
 import Loading from '../components/Loading';
 
 import '../styles/JcOwnedDetail.css';
+
+const { Text } = Typography;
+const Option = Select.Option;
 
 class JavagochiOwnedDetail extends React.Component {
 
@@ -13,7 +16,53 @@ class JavagochiOwnedDetail extends React.Component {
         javagochi: {},
         items: [],
         next_level: {},
-        all_javagochis: []
+        all_javagochis: [],
+        selected_race_trade: "",
+        popupVisible: false,
+        message: ""
+    }
+
+    showModal = (e) => {
+        this.setState({
+            popupVisible: true
+        });
+    }
+
+    handleOk = (e) => {
+        this.setState({
+            popupVisible: false
+        });
+    }
+
+    handleChange = (val) => {
+        this.setState({
+            selected_race_trade: val
+        })
+    }
+
+    handleTradeStart = (e) => {
+        e.preventDefault();
+        console.log("Initiating trade. Trading " + this.state.javagochi.nickname + " for a " + this.state.selected_race_trade);
+
+        axios.post("http://localhost:8000/api/trades/add/", {
+          offered_id: this.state.javagochi.id,
+          interested_into: this.state.selected_race_trade,
+        })
+        .then((res) => {
+            this.setState({
+                message: res.data
+            });
+            this.showModal();
+        })
+        .catch((err) => {
+            console.log(err.response);
+            if(err.response.data !== undefined) {
+                this.setState({
+                    message: err.response.data
+                });
+                this.showModal();
+            }
+        });
     }
 
     componentDidMount() {
@@ -26,10 +75,11 @@ class JavagochiOwnedDetail extends React.Component {
             axios.get('http://localhost:8000/api/javagochi/market/')
         ])
         .then(axios.spread((jcRes, itemRes, allRes) => {
+            const all_javagochi_races = allRes.data.map(jc => jc.race);
             this.setState({
                 javagochi: jcRes.data,
                 items: itemRes.data,
-                all_javagochis: allRes.data
+                all_javagochis: all_javagochi_races
             });
 
             const lvl = this.state.javagochi.current_level;
@@ -65,10 +115,19 @@ class JavagochiOwnedDetail extends React.Component {
         const javagochi = this.state.javagochi;
         const items = this.state.items;
         const next_level = this.state.next_level;
+        const all_races = this.state.all_javagochis;
 
         if(javagochi.nickname !== undefined && items[0] !== undefined) {
             return (
                 <div>
+                    <Modal
+                      title="The page says:"
+                      visible={this.state.popupVisible}
+                      onOk={this.handleOk}
+                    >
+                        <Text>{this.state.message}</Text>
+                    </Modal>
+
                     <JavagochiOwned jc={javagochi} exp={next_level}/>
 
                     {
@@ -104,7 +163,26 @@ class JavagochiOwnedDetail extends React.Component {
                                   )}
                                 />
 
+                                <div style={{ marginTop: 15 }}>
+                                    <p>Choose a Javagochi to trade for this</p>
+                                    <Form onSubmit={this.handleTradeStart}>
 
+                                        <Select
+                                          showSearch
+                                          placeholder="Choose a Javagochi to trade this"
+                                          defaultActiveFirstOption={false}
+                                          showArrow={true}
+                                          style={{ width: 300, marginRight: 15 }}
+                                          filterOption={true}
+                                          onChange={this.handleChange}
+                                          notFoundContent={null}
+                                        >
+                                            {all_races.map(race => <Option key={race}>{race}</Option>)}
+                                        </Select>
+
+                                        <Button type="primary" htmlType="submit">Trade!</Button>
+                                    </Form>
+                                </div>
                             </div>
                         :
                             <div></div>

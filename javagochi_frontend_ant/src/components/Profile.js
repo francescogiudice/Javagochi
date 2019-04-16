@@ -1,8 +1,5 @@
 import React from 'react';
 import { Typography, Progress, Card, Row, Col, Avatar } from 'antd';
-import { Link } from 'react-router-dom';
-import JavagochiOwnedHorizontalList from './JavagochiOwnedHorizontalList';
-import ItemsOwnedHorizontalList from './ItemsOwnedHorizontalList';
 
 const { Title } = Typography;
 

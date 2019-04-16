@@ -6,7 +6,7 @@ import 'antd/dist/antd.css';
 const { Meta } = Card;
 
 const TradeCells = (props) => {
-    
+
     return (
         <List
             grid={{
