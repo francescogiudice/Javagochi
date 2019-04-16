@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Typography, List, Avatar, Form, Button, Select, Modal } from 'antd';
+import { withRouter } from 'react-router-dom';
 
 import JavagochiOwned from '../components/JavagochiOwned';
 import Loading from '../components/Loading';
@@ -17,6 +18,7 @@ class JavagochiOwnedDetail extends React.Component {
         items: [],
         next_level: {},
         all_javagochis: [],
+        is_traded: false,
         selected_race_trade: "",
         popupVisible: false,
         message: ""
@@ -30,8 +32,10 @@ class JavagochiOwnedDetail extends React.Component {
 
     handleOk = (e) => {
         this.setState({
-            popupVisible: false
+            popupVisible: false,
+            is_traded: true
         });
+        this.props.history.push('/mytrades');
     }
 
     handleChange = (val) => {
@@ -72,13 +76,16 @@ class JavagochiOwnedDetail extends React.Component {
         axios.all([
             axios.get(`http://localhost:8000/api/javagochi/owned/${id}/`),
             axios.get(`http://localhost:8000/api/users/${user}/items/`),
+            axios.get(`http://localhost:8000/api/users/${user}/trades/`),
             axios.get('http://localhost:8000/api/javagochi/market/')
         ])
-        .then(axios.spread((jcRes, itemRes, allRes) => {
+        .then(axios.spread((jcRes, itemRes, tradeRes, allRes) => {
             const all_javagochi_races = allRes.data.map(jc => jc.race);
+            const is_traded = tradeRes.data.filter(function (trade) { return trade.offering.id == id; }).length > 0;
             this.setState({
                 javagochi: jcRes.data,
                 items: itemRes.data,
+                is_traded: is_traded,
                 all_javagochis: all_javagochi_races
             });
 
@@ -117,7 +124,7 @@ class JavagochiOwnedDetail extends React.Component {
         const next_level = this.state.next_level;
         const all_races = this.state.all_javagochis;
 
-        if(javagochi.nickname !== undefined && items[0] !== undefined) {
+        if(javagochi.nickname !== undefined) {
             return (
                 <div>
                     <Modal
@@ -136,6 +143,7 @@ class JavagochiOwnedDetail extends React.Component {
                                 <List
                                   itemLayout="horizontal"
                                   bordered="true"
+                                  style={{ widt: 300 }}
                                   dataSource={items}
                                   renderItem={item => (
                                         <div className="hoverme">
@@ -154,6 +162,7 @@ class JavagochiOwnedDetail extends React.Component {
                                                 });
                                             }}>
                                                 <List.Item.Meta
+                                                  style={{ widt: 300 }}
                                                   avatar={<Avatar src={item.item.image} />}
                                                   title={item.item.name + "(" + item.amount_owned + ")"}
                                                   description={item.item.property_modified + ": " + item.item.amount_modified}
@@ -163,26 +172,31 @@ class JavagochiOwnedDetail extends React.Component {
                                   )}
                                 />
 
-                                <div style={{ marginTop: 15 }}>
-                                    <p>Choose a Javagochi to trade for this</p>
-                                    <Form onSubmit={this.handleTradeStart}>
+                                {
+                                    !this.state.is_traded ?
+                                        <div style={{ marginTop: 15 }}>
+                                            <p>Choose a Javagochi to trade for this</p>
+                                            <Form onSubmit={this.handleTradeStart}>
 
-                                        <Select
-                                          showSearch
-                                          placeholder="Choose a Javagochi to trade this"
-                                          defaultActiveFirstOption={false}
-                                          showArrow={true}
-                                          style={{ width: 300, marginRight: 15 }}
-                                          filterOption={true}
-                                          onChange={this.handleChange}
-                                          notFoundContent={null}
-                                        >
-                                            {all_races.map(race => <Option key={race}>{race}</Option>)}
-                                        </Select>
+                                                <Select
+                                                  showSearch
+                                                  placeholder="Choose a Javagochi to trade this"
+                                                  defaultActiveFirstOption={false}
+                                                  showArrow={true}
+                                                  style={{ width: 300, marginRight: 15 }}
+                                                  filterOption={true}
+                                                  onChange={this.handleChange}
+                                                  notFoundContent={null}
+                                                >
+                                                    {all_races.map(race => <Option key={race}>{race}</Option>)}
+                                                </Select>
 
-                                        <Button type="primary" htmlType="submit">Trade!</Button>
-                                    </Form>
-                                </div>
+                                                <Button type="primary" htmlType="submit">Trade!</Button>
+                                            </Form>
+                                        </div>
+                                    :
+                                        <div></div>
+                                }
                             </div>
                         :
                             <div></div>
@@ -198,4 +212,4 @@ class JavagochiOwnedDetail extends React.Component {
     }
 }
 
-export default JavagochiOwnedDetail;
+export default withRouter(JavagochiOwnedDetail);

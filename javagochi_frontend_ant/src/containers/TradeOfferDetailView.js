@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import { Typography, Spin } from 'antd';
+import { Typography, Spin, Button } from 'antd';
+import { withRouter } from 'react-router-dom';
 
 import TradeDetail from '../components/TradeDetail';
 const { Title } = Typography;
@@ -10,6 +11,23 @@ class TradeOfferDetail extends React.Component {
     state = {
         trade: {},
         next_level: {}
+    }
+
+    acceptTrade() {
+        console.log("Trade accepted");
+    }
+
+    removeTrade = () => {
+        const id = this.state.trade.id;
+        axios.delete(`http://localhost:8000/api/trades/${id}/close`)
+        .then((res) => {
+            console.log(res);
+            this.props.history.push('/mytrades');
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+        console.log("Removing trade");
     }
 
     componentDidMount() {
@@ -42,10 +60,22 @@ class TradeOfferDetail extends React.Component {
         }
         else {
             return (
-                <TradeDetail data={this.state} />
+                <div>
+                    <TradeDetail data={this.state} />
+                    {
+                        this.state.trade.offering.owner.username == localStorage.getItem('username') ?
+                            <div>
+                                <Button type="primary" onClick={this.removeTrade}>Remove this trade</Button>
+                            </div>
+                        :
+                            <div>
+                                <Button type="primary" onClick={this.acceptTrade}>Accept this trade</Button>
+                            </div>
+                    }
+                </div>
             );
         }
     }
 }
 
-export default TradeOfferDetail;
+export default withRouter(TradeOfferDetail);

@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Typography, Button, Form, Input, Modal } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 import JavagochiRace from '../components/JavagochiRace';
 import Loading from '../components/Loading';
@@ -27,6 +27,7 @@ class JavagochiDetail extends React.Component {
         this.setState({
             popupVisible: false
         });
+        this.props.history.push('/myjavagochis');
     }
 
     handleCancel = (e) => {
@@ -134,4 +135,4 @@ class JavagochiDetail extends React.Component {
     }
 }
 
-export default JavagochiDetail;
+export default withRouter(JavagochiDetail);
