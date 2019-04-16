@@ -12,7 +12,8 @@ class JavagochiOwnedDetail extends React.Component {
     state = {
         javagochi: {},
         items: [],
-        next_level: {}
+        next_level: {},
+        all_javagochis: []
     }
 
     componentDidMount() {
@@ -21,12 +22,14 @@ class JavagochiOwnedDetail extends React.Component {
 
         axios.all([
             axios.get(`http://localhost:8000/api/javagochi/owned/${id}/`),
-            axios.get(`http://localhost:8000/api/users/${user}/items/`)
+            axios.get(`http://localhost:8000/api/users/${user}/items/`),
+            axios.get('http://localhost:8000/api/javagochi/market/')
         ])
-        .then(axios.spread((jcRes, itemRes) => {
+        .then(axios.spread((jcRes, itemRes, allRes) => {
             this.setState({
                 javagochi: jcRes.data,
-                items: itemRes.data
+                items: itemRes.data,
+                all_javagochis: allRes.data
             });
 
             const lvl = this.state.javagochi.current_level;
@@ -68,35 +71,44 @@ class JavagochiOwnedDetail extends React.Component {
                 <div>
                     <JavagochiOwned jc={javagochi} exp={next_level}/>
 
-                    <List
-                      itemLayout="horizontal"
-                      bordered="true"
-                      dataSource={items}
-                      renderItem={item => (
-                            <div className="hoverme">
-                                <List.Item onClick={(e) => {
-                                    e.preventDefault();
-                                    const id = javagochi.id;
-                                    axios.put(`http://localhost:8000/api/javagochi/owned/${id}/useitem/`, {
-                                        item: item.item.name,
-                                        user: item.owner.username
-                                    })
-                                    .then((res) => {
-                                        this.reloadJavagochi();
-                                    })
-                                    .catch((err) => {
-                                        console.log(err);
-                                    });
-                                }}>
-                                    <List.Item.Meta
-                                      avatar={<Avatar src={item.item.image} />}
-                                      title={item.item.name + "(" + item.amount_owned + ")"}
-                                      description={item.item.property_modified + ": " + item.item.amount_modified}
-                                    />
-                                </List.Item>
+                    {
+                        javagochi.owner.username === localStorage.getItem('username') ?
+                            <div>
+                                <List
+                                  itemLayout="horizontal"
+                                  bordered="true"
+                                  dataSource={items}
+                                  renderItem={item => (
+                                        <div className="hoverme">
+                                            <List.Item onClick={(e) => {
+                                                e.preventDefault();
+                                                const id = javagochi.id;
+                                                axios.put(`http://localhost:8000/api/javagochi/owned/${id}/useitem/`, {
+                                                    item: item.item.name,
+                                                    user: item.owner.username
+                                                })
+                                                .then((res) => {
+                                                    this.reloadJavagochi();
+                                                })
+                                                .catch((err) => {
+                                                    console.log(err);
+                                                });
+                                            }}>
+                                                <List.Item.Meta
+                                                  avatar={<Avatar src={item.item.image} />}
+                                                  title={item.item.name + "(" + item.amount_owned + ")"}
+                                                  description={item.item.property_modified + ": " + item.item.amount_modified}
+                                                />
+                                            </List.Item>
+                                        </div>
+                                  )}
+                                />
+
+
                             </div>
-                      )}
-                    />
+                        :
+                            <div></div>
+                    }
                 </div>
             );
         }
