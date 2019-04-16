@@ -1,12 +1,16 @@
 import React from 'react';
 import axios from 'axios';
+import { Row, Col, Button } from 'antd';
+import { Link } from 'react-router-dom';
 
 import Profile from '../components/Profile';
-import Intro from '../components/Intro';
+import JavagochiOwnedHorizontalList from '../components/JavagochiOwnedHorizontalList';
+import ItemsOwnedHorizontalList from '../components/ItemsOwnedHorizontalList';
+import Loading from '../components/Loading';
 
 import '../styles/Intro.css';
 
-class ProfileView extends React.Component {
+class UserDetailView extends React.Component {
 
     state = {
         user: {},
@@ -42,17 +46,36 @@ class ProfileView extends React.Component {
     }
 
     render() {
-        if(this.state.user.username !== undefined){
+        const user = this.state.user;
+        const javagochis = this.state.javagochis;
+        const items = this.state.items;
+        const next_level = this.state.next_level;
+
+        if(user.username !== undefined && next_level.exp_for_next_level !== undefined){
+            console.log("Inside if: " + user.username);
             return (
-                <Profile data={this.state} />
+                <div style={{ padding: '30px' }}>
+                    <Profile user={user} next_level={next_level}/>
+
+                    <Row gutter={16}>
+                        <Col span={8}>
+                            <JavagochiOwnedHorizontalList javagochis={javagochis}/>
+                        </Col>
+
+                        <Col span={8}>
+                            <ItemsOwnedHorizontalList items={items} />
+                        </Col>
+                    </Row>
+                </div>
             );
         }
         else {
+            console.log("Inside else: " + user.username);
             return (
-                <Intro />
+                <Loading />
             );
         }
     }
 }
 
-export default ProfileView;
+export default UserDetailView;

@@ -1,11 +1,10 @@
 import React from 'react';
-import { List, Card } from 'antd';
+import { List } from 'antd';
+import JavagochiCard from './JavagochiCard';
 
 import 'antd/dist/antd.css';
 
-const { Meta } = Card;
-
-const JcCells = (props) => {
+const JavagochiCells = (props) => {
 
     return (
         <List
@@ -26,16 +25,7 @@ const JcCells = (props) => {
                 <List.Item key={item.race}>
 
                     <a href={"/detail/" + item.race}>
-                        <Card
-                          style={{ width: 300, height: 400 }}
-                          cover={<img alt="example" src={item.image} style={{ width: 300, height: 300 }} />}
-                          hoverable
-                        >
-                          <Meta
-                            title={item.race}
-                            description={"Cost: " + item.cost}
-                          />
-                        </Card>
+                        <JavagochiCard javagochi={item}/>
                     </a>
                 </List.Item>
             )}
@@ -43,4 +33,4 @@ const JcCells = (props) => {
     )
 }
 
-export default JcCells;
+export default JavagochiCells;

@@ -1,7 +1,8 @@
 import React from 'react';
 import axios from 'axios';
-import ItemCells from '../components/ItemCells';
 import { Input } from 'antd';
+import ItemCells from '../components/ItemCells';
+import Loading from '../components/Loading';
 
 import '../styles/JcList.css';
 
@@ -25,35 +26,44 @@ class ItemList extends React.Component {
     }
 
     render() {
-        return (
-            <div>
-                <Search
-                  placeholder="Search..."
+        const items = this.state.items;
 
-                  onChange={(e) => {
-                      this.setState({
-                          searched: []
-                      });
-                      var interesting = [];
+        if(items[0] !== undefined) {
+            return (
+                <div>
+                    <Search
+                      placeholder="Search..."
 
-                      this.state.items.forEach(function (item) {
-                          if(item.name.includes(e.target.value)) {
-                              interesting.push(item);
-                          }
-                      });
+                      onChange={(e) => {
+                          this.setState({
+                              searched: []
+                          });
+                          var interesting = [];
 
-                      this.setState( {
-                          searched: interesting
-                      })
-                  }}
+                          this.state.items.forEach(function (item) {
+                              if(item.name.includes(e.target.value)) {
+                                  interesting.push(item);
+                              }
+                          });
 
-                  className="test-class"
+                          this.setState( {
+                              searched: interesting
+                          })
+                      }}
 
-                  style={{ marginBottom: 15, width: 300 }}
-                />
-                <ItemCells data={this.state.searched} />
-            </div>
-        );
+                      className="test-class"
+
+                      style={{ marginBottom: 15, width: 300 }}
+                    />
+                    <ItemCells data={this.state.searched} />
+                </div>
+            );
+        }
+        else {
+            return (
+                <Loading />
+            )
+        }
     }
 }
 

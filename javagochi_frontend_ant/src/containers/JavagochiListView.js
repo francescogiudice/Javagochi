@@ -1,7 +1,8 @@
 import React from 'react';
 import axios from 'axios';
-import JcCells from '../components/JcCell';
 import { Input } from 'antd';
+import JavagochiCells from '../components/JavagochiCells';
+import Loading from '../components/Loading';
 
 import '../styles/JcList.css';
 
@@ -25,35 +26,44 @@ class JavagochiList extends React.Component {
     }
 
     render() {
-        return (
-            <div>
-                <Search
-                  placeholder="Search..."
+        const javagochis = this.state.javagochis;
 
-                  onChange={(e) => {
-                      this.setState({
-                          searched: []
-                      });
-                      var interesting = [];
+        if(javagochis[0] !== undefined) {
+            return (
+                <div>
+                    <Search
+                      placeholder="Search..."
 
-                      this.state.javagochis.forEach(function (javagochi) {
-                          if(javagochi.race.includes(e.target.value)) {
-                              interesting.push(javagochi);
-                          }
-                      });
+                      onChange={(e) => {
+                          this.setState({
+                              searched: []
+                          });
+                          var interesting = [];
 
-                      this.setState( {
-                          searched: interesting
-                      })
-                  }}
+                          this.state.javagochis.forEach(function (javagochi) {
+                              if(javagochi.race.includes(e.target.value)) {
+                                  interesting.push(javagochi);
+                              }
+                          });
 
-                  className="test-class"
+                          this.setState( {
+                              searched: interesting
+                          })
+                      }}
 
-                  style={{ marginBottom: 15, width: 300 }}
-                />
-                <JcCells data={this.state.searched} />
-            </div>
-        );
+                      className="test-class"
+
+                      style={{ marginBottom: 15, width: 300 }}
+                    />
+                    <JavagochiCells data={this.state.searched} />
+                </div>
+            );
+        }
+        else {
+            return (
+                <Loading />
+            )
+        }
     }
 }
 

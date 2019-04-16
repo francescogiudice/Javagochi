@@ -1,10 +1,10 @@
 import React from 'react';
 import { List } from 'antd';
-import ItemCard from './ItemCard';
+import JavagochiOwnedCard from './JavagochiOwnedCard';
 
 import 'antd/dist/antd.css';
 
-const ItemCells = (props) => {
+const JavagochiOwnedCells = (props) => {
 
     return (
         <List
@@ -22,10 +22,10 @@ const ItemCells = (props) => {
             dataSource = {props.data}
 
             renderItem={item => (
-                <List.Item key={item.name}>
+                <List.Item key={item.race}>
 
-                    <a href={"/itemdetail/" + item.name}>
-                        <ItemCard item={item}/>
+                    <a href={"/myjavagochis/" + item.id}>
+                        <JavagochiOwnedCard javagochi={item}/>
                     </a>
                 </List.Item>
             )}
@@ -33,4 +33,4 @@ const ItemCells = (props) => {
     )
 }
 
-export default ItemCells;
+export default JavagochiOwnedCells;

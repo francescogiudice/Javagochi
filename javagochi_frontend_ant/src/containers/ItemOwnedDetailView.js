@@ -1,7 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 
-import ItemOwnedDetail from '../components/ItemOwnedDetail';
+import ItemDetail from '../components/ItemDetail';
+import Loading from '../components/Loading';
 
 class ItemOwnedDetailView extends React.Component {
 
@@ -11,7 +12,7 @@ class ItemOwnedDetailView extends React.Component {
 
     componentDidMount() {
         const id = this.props.match.params.id;
-        
+
         axios.get(`http://localhost:8000/api/items/owned/${id}/`)
             .then(res => {
                 this.setState({
@@ -21,9 +22,21 @@ class ItemOwnedDetailView extends React.Component {
     }
 
     render() {
-        return (
-            <ItemOwnedDetail data={this.state.item} />
-        );
+        const item = this.state.item;
+
+        if(item.item !== undefined) {
+            return (
+                <div>
+                    <ItemDetail item={item.item} />
+                    <p>{"You own: " + item.amount_owned}</p>
+                </div>
+            );
+        }
+        else {
+            return (
+                <Loading />
+            );
+        }
     }
 }
 

@@ -1,33 +1,33 @@
 import React from 'react';
 import axios from 'axios';
 import { Input } from 'antd';
-import JavagochiOwnedCells from '../components/JavagochiOwnedCells';
+import ItemOwnedCells from '../components/ItemOwnedCells';
 import Loading from '../components/Loading';
 
 const Search = Input.Search;
 
-class JavagochiOwnedList extends React.Component {
+class ItemsOwnedList extends React.Component {
 
     state = {
-        javagochis: [],
+        items: [],
         searched: []
     }
 
     componentDidMount() {
         const user = localStorage.getItem('username');
-        axios.get(`http://localhost:8000/api/users/${user}/javagochis/`)
+        axios.get(`http://localhost:8000/api/users/${user}/items/`)
             .then(res => {
                 this.setState({
-                    javagochis: res.data,
+                    items: res.data,
                     searched: res.data
                 });
             });
     }
 
     render() {
-        const javagochis = this.state.javagochis;
+        const items = this.state.items;
 
-        if(javagochis[0] !== undefined) {
+        if(items[0] !== undefined) {
             return (
                 <div>
                     <Search
@@ -39,9 +39,9 @@ class JavagochiOwnedList extends React.Component {
                           });
                           var interesting = [];
 
-                          this.state.javagochis.forEach(function (javagochi) {
-                              if(javagochi.race.race.includes(e.target.value) || javagochi.nickname.includes(e.target.value)) {
-                                  interesting.push(javagochi);
+                          this.state.items.forEach(function (item) {
+                              if(item.item.name.includes(e.target.value)) {
+                                  interesting.push(item);
                               }
                           });
 
@@ -54,7 +54,7 @@ class JavagochiOwnedList extends React.Component {
 
                       style={{ marginBottom: 15, width: 300 }}
                     />
-                    <JavagochiOwnedCells data={this.state.searched} />
+                    <ItemOwnedCells data={this.state.searched} />
                 </div>
             );
         }
@@ -66,4 +66,4 @@ class JavagochiOwnedList extends React.Component {
     }
 }
 
-export default JavagochiOwnedList;
+export default ItemsOwnedList;
