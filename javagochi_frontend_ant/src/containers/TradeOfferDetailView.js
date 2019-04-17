@@ -63,7 +63,7 @@ class TradeOfferDetail extends React.Component {
                 <div>
                     <TradeDetail data={this.state} />
                     {
-                        this.state.trade.offering.owner.username == localStorage.getItem('username') ?
+                        this.state.trade.offering.owner.username === localStorage.getItem('username') ?
                             <div>
                                 <Button type="primary" onClick={this.removeTrade}>Remove this trade</Button>
                             </div>

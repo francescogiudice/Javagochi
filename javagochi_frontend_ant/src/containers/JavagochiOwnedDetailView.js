@@ -18,8 +18,10 @@ class JavagochiOwnedDetail extends React.Component {
         items: [],
         next_level: {},
         all_javagochis: [],
+        owned_javagochis: [],
         is_traded: false,
         selected_race_trade: "",
+        challenger_javagochi: 0,
         popupVisible: false,
         message: ""
     }
@@ -41,6 +43,13 @@ class JavagochiOwnedDetail extends React.Component {
     handleChange = (val) => {
         this.setState({
             selected_race_trade: val
+        })
+    }
+
+    handleSelect = (val) => {
+        console.log(val);
+        this.setState({
+            challenger_javagochi: val
         })
     }
 
@@ -69,6 +78,22 @@ class JavagochiOwnedDetail extends React.Component {
         });
     }
 
+    handleChallenge = (e) => {
+        e.preventDefault();
+
+        const id_challenged = this.state.javagochi.id;
+        axios.put(`http://localhost:8000/api/javagochi/${id_challenged}/challenge/`, {
+            id_challenger: this.state.challenger_javagochi
+        })
+        .then((res) => {
+            this.reloadJavagochi();
+            console.log(res.data)
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    }
+
     componentDidMount() {
         const id = this.props.match.params.id;
         const user = localStorage.getItem('username');
@@ -76,17 +101,22 @@ class JavagochiOwnedDetail extends React.Component {
         axios.all([
             axios.get(`http://localhost:8000/api/javagochi/owned/${id}/`),
             axios.get(`http://localhost:8000/api/users/${user}/items/`),
+            axios.get(`http://localhost:8000/api/users/${user}/javagochis/`),
             axios.get(`http://localhost:8000/api/users/${user}/trades/`),
             axios.get('http://localhost:8000/api/javagochi/market/')
+
         ])
-        .then(axios.spread((jcRes, itemRes, tradeRes, allRes) => {
+        .then(axios.spread((jcRes, itemRes, ownedjcRes, tradeRes, allRes) => {
             const all_javagochi_races = allRes.data.map(jc => jc.race);
-            const is_traded = tradeRes.data.filter(function (trade) { return trade.offering.id == id; }).length > 0;
+            const is_traded = tradeRes.data.filter(function (trade) { return trade.offering.id === id; }).length > 0;
+
+
             this.setState({
                 javagochi: jcRes.data,
                 items: itemRes.data,
                 is_traded: is_traded,
-                all_javagochis: all_javagochi_races
+                all_javagochis: all_javagochi_races,
+                owned_javagochis: ownedjcRes.data
             });
 
             const lvl = this.state.javagochi.current_level;
@@ -123,6 +153,7 @@ class JavagochiOwnedDetail extends React.Component {
         const items = this.state.items;
         const next_level = this.state.next_level;
         const all_races = this.state.all_javagochis;
+        const owned_javagochis = this.state.owned_javagochis;
 
         if(javagochi.nickname !== undefined) {
             return (
@@ -199,6 +230,28 @@ class JavagochiOwnedDetail extends React.Component {
                                 }
                             </div>
                         :
+                            owned_javagochis[0] !== undefined ?
+                            <div style={{ marginTop: 15 }}>
+                                <p>Choose a Javagochi to battle this one</p>
+                                <Form onSubmit={this.handleChallenge}>
+
+                                    <Select
+                                      showSearch
+                                      placeholder="Choose a Javagochi to battle this one"
+                                      defaultActiveFirstOption={false}
+                                      showArrow={true}
+                                      style={{ width: 300, marginRight: 15 }}
+                                      filterOption={true}
+                                      onChange={this.handleSelect}
+                                      notFoundContent={null}
+                                    >
+                                        {owned_javagochis.map(jc => <Option key={jc.id}>{jc.nickname + " (" + jc.race.race + ")"}</Option>)}
+                                    </Select>
+
+                                    <Button type="primary" htmlType="submit">Challenge!</Button>
+                                </Form>
+                            </div>
+                            :
                             <div></div>
                     }
                 </div>

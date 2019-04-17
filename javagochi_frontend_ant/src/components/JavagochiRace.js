@@ -42,6 +42,9 @@ const JavagochiRace = (props) => {
                             <p>{"Cold: 0/" + javagochi.max_cold}</p>
                             <Progress percent={0} size="small" showInfo={false} />
 
+                            <p>{"Strength: " + javagochi.strength}</p>
+                            <Progress percent={(javagochi.strength) / 100} size="small" showInfo={false} />
+
                             <p>{"Min. user level: " + javagochi.min_user_level}</p>
 
                         </Card>

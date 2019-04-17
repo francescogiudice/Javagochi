@@ -41,6 +41,9 @@ const JavagochiOwned = (props) => {
                         <Progress percent={(100 * javagochi.current_cold) / javagochi.race.max_cold} size="small" showInfo={false} />
                         <p>{"Cold: " + javagochi.current_cold + "/" + javagochi.race.max_cold}</p>
 
+                        <Progress percent={(javagochi.race.strength) / 100} size="small" showInfo={false} />
+                        <p>{"Strength: " + javagochi.race.strength}</p>
+
                         <br/>
 
                         <p>{"Level: " + javagochi.current_level}</p>
