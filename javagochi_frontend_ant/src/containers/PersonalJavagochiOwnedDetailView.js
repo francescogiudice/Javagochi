@@ -106,13 +106,13 @@ class PersonalJavagochiOwnedDetail extends React.Component {
         .then(axios.spread((jcRes, itemRes, ownedjcRes, tradeRes, allRes) => {
             const all_javagochi_races = allRes.data.map(jc => jc.race);
             const is_traded = tradeRes.data.filter(function (trade) { return trade.offering.id === id; }).length > 0;
-
+            console.log(all_javagochi_races);
 
             this.setState({
                 javagochi: jcRes.data,
                 items: itemRes.data,
                 is_traded: is_traded,
-                all_javagochis: all_javagochi_races,
+                all_javagochi_races: all_javagochi_races,
                 owned_javagochis: ownedjcRes.data
             });
 

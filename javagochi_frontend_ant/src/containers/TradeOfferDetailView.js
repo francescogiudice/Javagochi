@@ -1,20 +1,44 @@
 import React from 'react';
 import axios from 'axios';
-import { Typography, Spin, Button } from 'antd';
+import { Typography, Spin, Button, Form, Select } from 'antd';
 import { withRouter } from 'react-router-dom';
 
 import TradeDetail from '../components/TradeDetail';
 const { Title } = Typography;
 
+const Option = Select.Option;
+
 class TradeOfferDetail extends React.Component {
 
     state = {
         trade: {},
-        next_level: {}
+        next_level: {},
+        tradeable_jcs: [],
+        selected_jc_trade: 0
     }
 
-    acceptTrade() {
-        console.log("Trade accepted");
+    handleSelect = (val) => {
+        console.log(val);
+        this.setState({
+            selected_jc_trade: val
+        })
+    }
+
+    acceptTrade = (e) => {
+        e.preventDefault();
+
+        const id = this.state.trade.id;
+        console.log(this.state.selected_jc_trade);
+        axios.put(`http://localhost:8000/api/trades/${id}/conclude/`, {
+            id_trader: this.state.selected_jc_trade
+        })
+        .then((res) => {
+            console.log(res.data);
+            this.props.history.push('/myjavagochis');
+        })
+        .catch((err) => {
+            console.log(err);
+        });
     }
 
     removeTrade = () => {
@@ -32,11 +56,17 @@ class TradeOfferDetail extends React.Component {
 
     componentDidMount() {
         const id = this.props.match.params.tradeId;
+        const user = localStorage.getItem('username');
 
-        axios.get(`http://localhost:8000/api/trades/${id}`)
-        .then((res) => {
+        axios.all([
+            axios.get(`http://localhost:8000/api/trades/${id}`),
+            axios.get(`http://localhost:8000/api/users/${user}/javagochis/`)
+        ])
+        .then(axios.spread((resTrade, resJc) => {
+            const tradeable_jcs = resJc.data.filter(function (jc) { return jc.race.race === resTrade.data.interested_into.race; });
             this.setState({
-                trade: res.data
+                trade: resTrade.data,
+                tradeable_jcs: tradeable_jcs
             });
 
             const lvl = this.state.trade.offering.current_level;
@@ -45,8 +75,8 @@ class TradeOfferDetail extends React.Component {
                 this.setState({
                     next_level: res.data
                 })
-            })
-        });
+            });
+        }));
     }
 
     render() {
@@ -59,6 +89,7 @@ class TradeOfferDetail extends React.Component {
             )
         }
         else {
+            const tradeable_jcs = this.state.tradeable_jcs;
             return (
                 <div>
                     <TradeDetail data={this.state} />
@@ -68,8 +99,25 @@ class TradeOfferDetail extends React.Component {
                                 <Button type="primary" onClick={this.removeTrade}>Remove this trade</Button>
                             </div>
                         :
-                            <div>
-                                <Button type="primary" onClick={this.acceptTrade}>Accept this trade</Button>
+                            <div style={{ marginTop: 15 }}>
+                                <p>Choose a Javagochi to trade</p>
+                                <Form onSubmit={this.acceptTrade}>
+
+                                    <Select
+                                      showSearch
+                                      placeholder="Choose a Javagochi to battle this one"
+                                      defaultActiveFirstOption={false}
+                                      showArrow={true}
+                                      style={{ width: 300, marginRight: 15 }}
+                                      filterOption={true}
+                                      onChange={this.handleSelect}
+                                      notFoundContent={null}
+                                    >
+                                        {tradeable_jcs.map(jc => <Option key={jc.id}>{jc.nickname + " (" + jc.race.race + ")"}</Option>)}
+                                    </Select>
+
+                                    <Button type="primary" htmlType="submit">Trade</Button>
+                                </Form>
                             </div>
                     }
                 </div>
