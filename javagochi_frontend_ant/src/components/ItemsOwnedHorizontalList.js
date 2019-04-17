@@ -6,25 +6,24 @@ import 'antd/dist/antd.css';
 const ItemsOwnedHorizontalList = (props) => {
 
     const items = props.items;
+    const onClick = props.onClick;
 
     return (
+
         <List
           itemLayout="horizontal"
           bordered="true"
+          style={{ width: 400 }}
           dataSource={items}
           renderItem={item => (
                 <div className="hoverme">
-                <a href={"/myitems/" + item.id}>
-                <List.Item onClick={(e) => {
-                console.log(e);
-                }}>
-                <List.Item.Meta
-                avatar={<Avatar src={item.item.image} />}
-                title={item.item.name + "(" + item.amount_owned + ")"}
-                description={item.item.property_modified + ": " + item.item.amount_modified}
-                />
-                </List.Item>
-                </a>
+                    <List.Item onClick={ () => onClick(item) }>
+                        <List.Item.Meta
+                          avatar={<Avatar src={item.item.image} />}
+                          title={item.item.name + "(" + item.amount_owned + ")"}
+                          description={item.item.property_modified + ": " + item.item.amount_modified}
+                        />
+                    </List.Item>
                 </div>
           )}
         />

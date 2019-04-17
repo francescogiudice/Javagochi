@@ -59,7 +59,7 @@ class PersonalProfileView extends React.Component {
 
                     <Row gutter={16}>
                         <Col span={8}>
-                            <JavagochiOwnedHorizontalList javagochis={javagochis}/>
+                            <JavagochiOwnedHorizontalList javagochis={javagochis} link="myjavagochis/"/>
                         </Col>
 
                         <Col span={8}>

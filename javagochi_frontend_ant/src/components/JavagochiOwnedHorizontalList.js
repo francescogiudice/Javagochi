@@ -6,6 +6,7 @@ import 'antd/dist/antd.css';
 const JavagochiOwnedHorizontalList = (props) => {
 
     const javagochis = props.javagochis;
+    const link_start = props.link;
 
     return (
         <List
@@ -14,7 +15,7 @@ const JavagochiOwnedHorizontalList = (props) => {
           dataSource={javagochis}
           renderItem={javagochi => (
                 <div className="hoverme">
-                    <a href={"/myjavagochis/" + javagochi.id}>
+                    <a href={link_start + javagochi.id}>
                         <List.Item>
                         <List.Item.Meta
                           avatar={<Avatar src={javagochi.race.image} />}

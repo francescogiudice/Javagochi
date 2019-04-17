@@ -27,7 +27,7 @@ class ItemsOwnedList extends React.Component {
     render() {
         const items = this.state.items;
 
-        if(items[0] !== undefined) {
+        if(items[0] !== undefined || items.length > 0) {
             return (
                 <div>
                     <Search

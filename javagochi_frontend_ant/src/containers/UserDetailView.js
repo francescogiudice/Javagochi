@@ -58,7 +58,7 @@ class UserDetailView extends React.Component {
 
                     <Row gutter={16}>
                         <Col span={8}>
-                            <JavagochiOwnedHorizontalList javagochis={javagochis}/>
+                            <JavagochiOwnedHorizontalList javagochis={javagochis} link={`/profile/${user.username}/javagochi/`}/>
                         </Col>
 
                         <Col span={8}>

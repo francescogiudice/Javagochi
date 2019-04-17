@@ -26,8 +26,8 @@ class JavagochiOwnedList extends React.Component {
 
     render() {
         const javagochis = this.state.javagochis;
-
-        if(javagochis[0] !== undefined) {
+        
+        if(javagochis[0] === undefined || javagochis.length > 0) {
             return (
                 <div>
                     <Search
