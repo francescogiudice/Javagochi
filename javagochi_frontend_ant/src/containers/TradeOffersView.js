@@ -1,8 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import TradeCells from '../components/TradeCells';
-import { Input } from 'antd';
+import { Typography, Input } from 'antd';
 
+const { Title } = Typography;
 const Search = Input.Search;
 
 class TradeOffersView extends React.Component {
@@ -26,7 +27,7 @@ class TradeOffersView extends React.Component {
                 "Content-Type": "application/json"
             }
         }
-        
+
         axios.get('http://localhost:8000/api/trades/all/')
             .then(res => {
                 var t = res.data.filter(function(trade) {
@@ -71,6 +72,7 @@ class TradeOffersView extends React.Component {
 
                   style={{ marginBottom: 15, width: 300 }}
                 />
+                <Title>All trades happening</Title>
                 <TradeCells data={this.state.searched} />
             </div>
         );

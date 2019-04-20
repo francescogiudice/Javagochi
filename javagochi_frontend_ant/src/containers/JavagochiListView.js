@@ -1,11 +1,12 @@
 import React from 'react';
 import axios from 'axios';
-import { Input } from 'antd';
+import { Typography, Input } from 'antd';
 import JavagochiCells from '../components/JavagochiCells';
 import Loading from '../components/Loading';
 
 import '../styles/JcList.css';
 
+const { Title } = Typography;
 const Search = Input.Search;
 
 class JavagochiList extends React.Component {
@@ -70,6 +71,7 @@ class JavagochiList extends React.Component {
 
                       style={{ marginBottom: 15, width: 300 }}
                     />
+                    <Title>All Javagochis</Title>
                     <JavagochiCells data={this.state.searched} />
                 </div>
             );

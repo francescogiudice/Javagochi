@@ -1,7 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import TradeCells from '../components/TradeCells';
-import { Input } from 'antd';
+import { Typography, Input } from 'antd';
+
+const { Title } = Typography;
 
 const Search = Input.Search;
 
@@ -60,6 +62,7 @@ class TradeOffersView extends React.Component {
 
                   style={{ marginBottom: 15, width: 300 }}
                 />
+                <Title>Your trades</Title>
                 <TradeCells data={this.state.searched} />
             </div>
         );

@@ -1,10 +1,11 @@
 import React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { Input } from 'antd';
+import { Typography, Input } from 'antd';
 import JavagochiOwnedCells from '../components/JavagochiOwnedCells';
 import Loading from '../components/Loading';
 
+const { Title } = Typography;
 const Search = Input.Search;
 
 class JavagochiOwnedList extends React.Component {
@@ -71,6 +72,7 @@ class JavagochiOwnedList extends React.Component {
 
                       style={{ marginBottom: 15, width: 300 }}
                     />
+                    <Title>Your Javagochis</Title>
                     <JavagochiOwnedCells data={this.state.searched} />
                 </div>
             );

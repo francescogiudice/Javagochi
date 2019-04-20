@@ -97,8 +97,16 @@ class TradeOfferDetail extends React.Component {
         }
         else {
             const tradeable_jcs = this.state.tradeable_jcs;
+            const offering = this.state.trade.offering;
+            const user = this.state.trade.offering.owner;
             return (
                 <div>
+                    {
+                        user.username === localStorage.getItem('username') ?
+                            <Title>{"You are offering " + offering.nickname + " (" + offering.race.race + ")"}</Title>
+                        :
+                            <Title>{user.username + " offers " + offering.nickname + " (" + offering.race.race + ")"}</Title>
+                    }
                     <TradeDetail data={this.state} />
                     {
                         this.state.trade.offering.owner.username === localStorage.getItem('username') ?
@@ -112,7 +120,7 @@ class TradeOfferDetail extends React.Component {
 
                                     <Select
                                       showSearch
-                                      placeholder="Choose a Javagochi to battle this one"
+                                      placeholder="Choose a Javagochi to trade for this one"
                                       defaultActiveFirstOption={false}
                                       showArrow={true}
                                       style={{ width: 300, marginRight: 15 }}

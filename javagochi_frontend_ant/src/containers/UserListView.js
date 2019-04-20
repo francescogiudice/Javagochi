@@ -1,8 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import UserCells from '../components/UserCells';
-import { Input } from 'antd';
+import { Typography, Input } from 'antd';
 
+const { Title } = Typography;
 const Search = Input.Search;
 
 class UserList extends React.Component {
@@ -26,7 +27,7 @@ class UserList extends React.Component {
                 "Content-Type": "application/json"
             }
         }
-        
+
         axios.get('http://localhost:8000/api/users/all')
             .then(res => {
                 this.setState({
@@ -63,6 +64,7 @@ class UserList extends React.Component {
 
                   style={{ marginBottom: 15, width: 300 }}
                 />
+                <Title>Other people</Title>
                 <UserCells data={this.state.searched} />
             </div>
         );

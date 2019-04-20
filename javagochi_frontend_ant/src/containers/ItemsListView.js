@@ -1,11 +1,12 @@
 import React from 'react';
 import axios from 'axios';
-import { Input } from 'antd';
+import { Typography, Input } from 'antd';
 import ItemCells from '../components/ItemCells';
 import Loading from '../components/Loading';
 
 import '../styles/JcList.css';
 
+const { Title } = Typography;
 const Search = Input.Search;
 
 class ItemList extends React.Component {
@@ -29,7 +30,7 @@ class ItemList extends React.Component {
                 "Content-Type": "application/json"
             }
         }
-        
+
         axios.get('http://localhost:8000/api/items/market')
             .then(res => {
                 this.setState({
@@ -69,6 +70,7 @@ class ItemList extends React.Component {
 
                       style={{ marginBottom: 15, width: 300 }}
                     />
+                    <Title>All items</Title>
                     <ItemCells data={this.state.searched} />
                 </div>
             );

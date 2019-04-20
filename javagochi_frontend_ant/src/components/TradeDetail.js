@@ -12,13 +12,10 @@ class TradeDetail extends React.Component {
         const next_level = this.props.data.next_level;
 
         const jc_offered = trade.offering;
-        const user = trade.offering.owner.username;
         const trade_for = trade.interested_into;
         return (
 
             <div style={{ padding: '30px' }}>
-                <Title>{user + " offers " + jc_offered.nickname + " (" + jc_offered.race.race + ")"}</Title>
-
                 <JavagochiOwned jc={jc_offered} exp={next_level}/>
 
                 <Title>For</Title>

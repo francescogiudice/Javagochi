@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Form, Button, Select } from 'antd';
+import { Typography, Form, Button, Select } from 'antd';
 import { withRouter } from 'react-router-dom';
 
 import JavagochiOwned from '../components/JavagochiOwned';
@@ -9,6 +9,7 @@ import ModalPopup from '../components/ModalPopup';
 
 import '../styles/JcOwnedDetail.css';
 
+const { Title } = Typography;
 const Option = Select.Option;
 
 class UserJavagochiOwnedDetail extends React.Component {
@@ -34,7 +35,7 @@ class UserJavagochiOwnedDetail extends React.Component {
             popupVisible: false,
             is_traded: true
         });
-        this.props.history.push('/mytrades');
+        this.props.history.push('/myjavagochis');
     }
 
     handleSelect = (val) => {
@@ -52,8 +53,11 @@ class UserJavagochiOwnedDetail extends React.Component {
             id_challenger: this.state.challenger_javagochi_id
         })
         .then((res) => {
+            this.setState({
+                message: res.data
+            });
+            this.showModal();
             this.reloadJavagochi();
-            console.log(res.data)
         })
         .catch((err) => {
             console.log(err);
@@ -129,6 +133,7 @@ class UserJavagochiOwnedDetail extends React.Component {
                       text={this.state.message}
                     />
 
+                    <Title>{"Owner of this Javagochi: " + localStorage.getItem('username')}</Title>
                     <JavagochiOwned jc={javagochi} exp={next_level}/>
 
                     <div style={{ marginTop: 15 }}>
