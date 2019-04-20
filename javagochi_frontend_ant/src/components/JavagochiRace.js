@@ -27,23 +27,22 @@ const JavagochiRace = (props) => {
                             title="Statistics"
                             bordered={false}
                         >
-                            <p>{"Health: " + javagochi.max_health + "/" + javagochi.max_health}</p>
                             <Progress percent={100} size="small" showInfo={false} />
+                            <p>{"Health: " + javagochi.max_health + "/" + javagochi.max_health}</p>
 
+                            <Progress percent={0} size="small" showInfo={false} />
                             <p>{"Maximum age: " + javagochi.max_age}</p>
-                            <Progress percent={0} size="small" showInfo={false} />
 
+                            <Progress percent={0} size="small" showInfo={false} />
                             <p>{"Hunger: 0/" + javagochi.max_hunger}</p>
-                            <Progress percent={0} size="small" showInfo={false} />
 
+                            <Progress percent={0} size="small" showInfo={false} />
                             <p>{"Hot: 0/" + javagochi.max_hot}</p>
-                            <Progress percent={0} size="small" showInfo={false} />
 
-                            <p>{"Cold: 0/" + javagochi.max_cold}</p>
                             <Progress percent={0} size="small" showInfo={false} />
+                            <p>{"Cold: 0/" + javagochi.max_cold}</p>
 
                             <p>{"Strength: " + javagochi.strength}</p>
-                            <Progress percent={(javagochi.strength) / 100} size="small" showInfo={false} />
 
                             <p>{"Min. user level: " + javagochi.min_user_level}</p>
 

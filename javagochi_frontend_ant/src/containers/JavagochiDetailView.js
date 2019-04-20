@@ -38,6 +38,13 @@ class JavagochiDetail extends React.Component {
 
     handleBuy = (e) => {
         e.preventDefault();
+        const token = localStorage.getItem('token');
+        console.log(token);
+
+        axios.defaults.headers = {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`
+        }
 
         axios.post("http://localhost:8000/api/javagochi/buy/", {
           user: e.target[0].value,
@@ -63,6 +70,19 @@ class JavagochiDetail extends React.Component {
 
     componentDidMount() {
         const race = this.props.match.params.jcRace;
+        const token = localStorage.getItem('token');
+
+        if(token) {
+            axios.defaults.headers = {
+                "Content-Type": "application/json",
+                Authorization: `Token ${token}`
+            }
+        }
+        else {
+            axios.defaults.headers = {
+                "Content-Type": "application/json"
+            }
+        }
 
         axios.get(`http://localhost:8000/api/javagochi/${race}`)
         .then((res) => {

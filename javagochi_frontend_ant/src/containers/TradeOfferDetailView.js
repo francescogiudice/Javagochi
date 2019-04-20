@@ -58,6 +58,13 @@ class TradeOfferDetail extends React.Component {
         const id = this.props.match.params.tradeId;
         const user = localStorage.getItem('username');
 
+        const token = localStorage.getItem('token');
+
+        axios.defaults.headers = {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`
+        }
+
         axios.all([
             axios.get(`http://localhost:8000/api/trades/${id}`),
             axios.get(`http://localhost:8000/api/users/${user}/javagochis/`)

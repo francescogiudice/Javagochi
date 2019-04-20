@@ -32,7 +32,7 @@ class CustomLayout extends React.Component {
                                 <Link to="/">Home</Link>
                             </Menu.Item>
 
-                            <Menu.Item key="2" onClick={this.props.logout}>Logout</Menu.Item>
+                            <Menu.Item key="2" onClick={this.props.logout}><Link to="/">Logout</Link></Menu.Item>
                         </Menu>
                     :
                         <Menu

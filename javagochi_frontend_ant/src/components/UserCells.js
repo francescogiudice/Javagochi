@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Card } from 'antd';
+import { List, Card, Avatar } from 'antd';
 
 import 'antd/dist/antd.css';
 
@@ -32,7 +32,7 @@ const UserCells = (props) => {
                       <a href={"/profile/" + item.username}>
                           <Card
                             style={{ width: 300, height: 400 }}
-                            cover={<img alt={item.username} src={item.image} style={{ width: 300, height: 300 }} />}
+                            cover={<Avatar src={item.image} style={{ width: 300, height: 300 }} />}
                             hoverable
                           >
                             <Meta

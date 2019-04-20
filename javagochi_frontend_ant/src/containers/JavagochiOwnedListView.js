@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
 import { Input } from 'antd';
 import JavagochiOwnedCells from '../components/JavagochiOwnedCells';
 import Loading from '../components/Loading';
@@ -11,22 +12,38 @@ class JavagochiOwnedList extends React.Component {
     state = {
         javagochis: [],
         searched: []
-    }
+    };
+
+    config = {
+        headers: {
+            Authorization: `${localStorage.getItem('token')}`,
+        }
+    };
+
+    data = {};
 
     componentDidMount() {
+        const token = localStorage.getItem('token');
         const user = localStorage.getItem('username');
-        axios.get(`http://localhost:8000/api/users/${user}/javagochis/`)
-            .then(res => {
-                this.setState({
-                    javagochis: res.data,
-                    searched: res.data
+
+        if(token) {
+            axios.defaults.headers = {
+                "Content-Type": "application/json",
+                Authorization: `Token ${token}`
+            }
+            axios.get(`http://localhost:8000/api/users/${user}/javagochis/`)
+                .then(res => {
+                    this.setState({
+                        javagochis: res.data,
+                        searched: res.data
+                    });
                 });
-            });
+        }
     }
 
     render() {
         const javagochis = this.state.javagochis;
-        
+
         if(javagochis[0] === undefined || javagochis.length > 0) {
             return (
                 <div>
@@ -66,4 +83,10 @@ class JavagochiOwnedList extends React.Component {
     }
 }
 
-export default JavagochiOwnedList;
+const mapStateToProps = state => {
+    return {
+        token: state.token
+    }
+}
+
+export default connect(mapStateToProps)(JavagochiOwnedList);

@@ -12,6 +12,12 @@ class ItemOwnedDetailView extends React.Component {
 
     componentDidMount() {
         const id = this.props.match.params.id;
+        const token = localStorage.getItem('token');
+
+        axios.defaults.headers = {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`
+        }
 
         axios.get(`http://localhost:8000/api/items/owned/${id}/`)
             .then(res => {

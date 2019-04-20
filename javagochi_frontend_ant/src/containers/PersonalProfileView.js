@@ -21,6 +21,19 @@ class PersonalProfileView extends React.Component {
 
     componentDidMount() {
         const user = localStorage.getItem('username');
+        const token = localStorage.getItem('token');
+
+        if(token) {
+            axios.defaults.headers = {
+                "Content-Type": "application/json",
+                Authorization: `Token ${token}`
+            }
+        }
+        else {
+            axios.defaults.headers = {
+                "Content-Type": "application/json"
+            }
+        }
         if(user != null) {
             axios.all([
                 axios.get(`http://localhost:8000/api/users/${user}/info/`),

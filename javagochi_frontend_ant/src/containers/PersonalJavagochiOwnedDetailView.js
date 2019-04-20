@@ -94,6 +94,12 @@ class PersonalJavagochiOwnedDetail extends React.Component {
     componentDidMount() {
         const id = this.props.match.params.id;
         const user = localStorage.getItem('username');
+        const token = localStorage.getItem('token');
+
+        axios.defaults.headers = {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`
+        }
 
         axios.all([
             axios.get(`http://localhost:8000/api/javagochi/owned/${id}/`),

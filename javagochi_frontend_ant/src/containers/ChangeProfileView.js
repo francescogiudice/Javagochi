@@ -14,6 +14,12 @@ class ChangeProfileView extends React.Component {
 
     componentDidMount() {
         const user = localStorage.getItem('username');
+        const token = localStorage.getItem('token');
+
+        axios.defaults.headers = {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`
+        }
         if(user != null) {
             axios.get(`http://localhost:8000/api/users/${user}/info/`)
             .then(res => {

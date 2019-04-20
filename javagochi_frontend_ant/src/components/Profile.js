@@ -16,7 +16,7 @@ const Profile = (props) => {
                         user.image !== "" ?
                             <Card
                               bordered={false}
-                              cover={<Avatar alt="user" src={user.image} style={{ width: 500, height: 500 }} />}
+                              cover={<Avatar alt="user" src={user.image} style={{ width: '100%', height: '100%' }} />}
                             ></Card>
                         :
                             <Card

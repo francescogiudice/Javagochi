@@ -16,6 +16,20 @@ class ItemList extends React.Component {
     }
 
     componentDidMount() {
+        const token = localStorage.getItem('token');
+
+        if(token) {
+            axios.defaults.headers = {
+                "Content-Type": "application/json",
+                Authorization: `Token ${token}`
+            }
+        }
+        else {
+            axios.defaults.headers = {
+                "Content-Type": "application/json"
+            }
+        }
+        
         axios.get('http://localhost:8000/api/items/market')
             .then(res => {
                 this.setState({

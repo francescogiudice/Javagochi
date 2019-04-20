@@ -13,6 +13,20 @@ class ItDetail extends React.Component {
 
     handleBuy(e) {
         e.preventDefault();
+
+        const token = localStorage.getItem('token');
+
+        if(token) {
+            axios.defaults.headers = {
+                "Content-Type": "application/json",
+                Authorization: `Token ${token}`
+            }
+        }
+        else {
+            axios.defaults.headers = {
+                "Content-Type": "application/json"
+            }
+        }
         axios.post("http://localhost:8000/api/items/buy/", {
             user: e.target[0].value,
             item: e.target[1].value,
@@ -42,7 +56,8 @@ class ItDetail extends React.Component {
     render() {
 
         const item = this.state.item;
-        if(localStorage.getItem('username') !== undefined) {
+
+        if(localStorage.getItem('username') !== undefined && localStorage.getItem('username') !== null) {
             return (
                 <div>
                     <ItemDetail item={item} />

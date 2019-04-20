@@ -47,6 +47,7 @@ export const authLogin = (username, password) => {
         })
         .then(res => {
             const token = res.data.key;
+            console.log(token);
             const expirationDate = new Date(new Date().getTime() + 3600 * 1000); //Expiration date 1 hour after
             localStorage.setItem('token', token);
             localStorage.setItem('expirationDate', expirationDate);

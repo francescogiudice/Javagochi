@@ -14,6 +14,12 @@ class TradeOffersView extends React.Component {
 
     componentDidMount() {
         const user = localStorage.getItem('username');
+        const token = localStorage.getItem('token');
+
+        axios.defaults.headers = {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`
+        }
         axios.get(`http://localhost:8000/api/users/${user}/trades/`)
             .then(res => {
                 this.setState({

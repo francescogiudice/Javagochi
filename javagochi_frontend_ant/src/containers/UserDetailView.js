@@ -20,7 +20,14 @@ class UserDetailView extends React.Component {
 
     componentDidMount() {
         const user = this.props.match.params.username;
+        const token = localStorage.getItem('token');
+
         if(user != null) {
+            axios.defaults.headers = {
+                "Content-Type": "application/json",
+                Authorization: `Token ${token}`
+            }
+            
             axios.all([
                 axios.get(`http://localhost:8000/api/users/${user}/info/`),
                 axios.get(`http://localhost:8000/api/users/${user}/javagochis/`),
