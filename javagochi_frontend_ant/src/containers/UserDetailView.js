@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Row, Col } from 'antd';
+import { Typography, Row, Col } from 'antd';
 
 import Profile from '../components/Profile';
 import JavagochiOwnedHorizontalList from '../components/JavagochiOwnedHorizontalList';
@@ -9,6 +9,8 @@ import Loading from '../components/Loading';
 
 import '../styles/Intro.css';
 
+const { Text } = Typography;
+
 class UserDetailView extends React.Component {
 
     state = {
@@ -16,6 +18,10 @@ class UserDetailView extends React.Component {
         javagochis: [],
         items: [],
         next_level: {}
+    }
+
+    clickedItem = (item) => {
+        console.log(item);
     }
 
     componentDidMount() {
@@ -58,25 +64,25 @@ class UserDetailView extends React.Component {
         const next_level = this.state.next_level;
 
         if(user.username !== undefined && next_level.exp_for_next_level !== undefined){
-            console.log("Inside if: " + user.username);
             return (
                 <div style={{ padding: '30px' }}>
                     <Profile user={user} next_level={next_level}/>
 
                     <Row gutter={16}>
                         <Col span={8}>
+                            <Text>{user.username + " Javagochis"}</Text>
                             <JavagochiOwnedHorizontalList javagochis={javagochis} link={`/profile/${user.username}/javagochi/`}/>
                         </Col>
 
                         <Col span={8}>
-                            <ItemsOwnedHorizontalList items={items} />
+                            <Text>{user.username + " items"}</Text>
+                            <ItemsOwnedHorizontalList items={items} onClick={this.clickedItem}/>
                         </Col>
                     </Row>
                 </div>
             );
         }
-        else {
-            console.log("Inside else: " + user.username);
+            else {
             return (
                 <Loading />
             );

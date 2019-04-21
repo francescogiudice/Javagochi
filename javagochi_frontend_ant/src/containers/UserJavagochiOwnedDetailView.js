@@ -133,7 +133,7 @@ class UserJavagochiOwnedDetail extends React.Component {
                       text={this.state.message}
                     />
 
-                    <Title>{"Owner of this Javagochi: " + localStorage.getItem('username')}</Title>
+                    <Title>{"Owner of this Javagochi: " + javagochi.owner.username}</Title>
                     <JavagochiOwned jc={javagochi} exp={next_level}/>
 
                     <div style={{ marginTop: 15 }}>

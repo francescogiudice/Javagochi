@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Form, Button, Select } from 'antd';
+import { Typography, Form, Button, Select, Modal } from 'antd';
 import { withRouter } from 'react-router-dom';
 
 import JavagochiOwned from '../components/JavagochiOwned';
@@ -10,6 +10,7 @@ import ItemsOwnedHorizontalList from '../components/ItemsOwnedHorizontalList';
 
 import '../styles/JcOwnedDetail.css';
 
+const { Text } = Typography;
 const Option = Select.Option;
 
 class PersonalJavagochiOwnedDetail extends React.Component {
@@ -22,7 +23,8 @@ class PersonalJavagochiOwnedDetail extends React.Component {
         is_traded: false,
         selected_race_trade: "",
         popupVisible: false,
-        message: ""
+        message: "",
+        showRaceModal: false
     }
 
     showModal = (e) => {
@@ -31,9 +33,16 @@ class PersonalJavagochiOwnedDetail extends React.Component {
         });
     }
 
+    initiateTrade = (e) => {
+        this.setState({
+            showRaceModal: true
+        })
+    }
+
     handleOk = (e) => {
         this.setState({
             popupVisible: false,
+            showRaceModal: false,
             is_traded: true
         });
         this.props.history.push('/mytrades');
@@ -170,33 +179,39 @@ class PersonalJavagochiOwnedDetail extends React.Component {
 
                     <JavagochiOwned jc={javagochi} exp={next_level}/>
 
+                    <Text>Items</Text>
                     <ItemsOwnedHorizontalList
                       items={items}
                       onClick={this.handleUseItem}
                     />
 
+                    <Modal visible={this.state.showRaceModal}>
+                        <div style={{ marginTop: 15 }}>
+                            <Form onSubmit={this.handleTradeStart}>
+
+                                <Select
+                                  showSearch
+                                  placeholder="Choose a Javagochi to trade this"
+                                  defaultActiveFirstOption={false}
+                                  showArrow={true}
+                                  style={{ width: 300, marginRight: 15 }}
+                                  filterOption={true}
+                                  onChange={this.handleChange}
+                                  notFoundContent={null}
+                                >
+                                    {all_races.map(race => <Option key={race}>{race}</Option>)}
+                                </Select>
+
+                                <Text>{this.state.selected_race_trade}</Text>
+
+                                <Button type="primary" htmlType="submit">Trade!</Button>
+                            </Form>
+                        </div>
+                    </Modal>
+
                     {
                         !this.state.is_traded ?
-                            <div style={{ marginTop: 15 }}>
-                                <p>Choose a Javagochi to trade for this</p>
-                                <Form onSubmit={this.handleTradeStart}>
-
-                                    <Select
-                                      showSearch
-                                      placeholder="Choose a Javagochi to trade this"
-                                      defaultActiveFirstOption={false}
-                                      showArrow={true}
-                                      style={{ width: 300, marginRight: 15 }}
-                                      filterOption={true}
-                                      onChange={this.handleChange}
-                                      notFoundContent={null}
-                                    >
-                                        {all_races.map(race => <Option key={race}>{race}</Option>)}
-                                    </Select>
-
-                                    <Button type="primary" htmlType="submit">Trade!</Button>
-                                </Form>
-                            </div>
+                            <Button type="primary" onClick={this.initiateTrade}>Choose a Javagochi to trade this</Button>
                         :
                             <div></div>
                     }

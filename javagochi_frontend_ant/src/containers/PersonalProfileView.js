@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Row, Col, Button } from 'antd';
+import { Typography, Row, Col, Button } from 'antd';
 import { Link } from 'react-router-dom';
 
 import Profile from '../components/Profile';
@@ -9,6 +9,8 @@ import ItemsOwnedHorizontalList from '../components/ItemsOwnedHorizontalList';
 import Loading from '../components/Loading';
 
 import '../styles/Intro.css';
+
+const { Text } = Typography;
 
 class PersonalProfileView extends React.Component {
 
@@ -72,15 +74,17 @@ class PersonalProfileView extends React.Component {
 
                     <Row gutter={16}>
                         <Col span={8}>
+                            <Text>Your Javagochis</Text>
                             <JavagochiOwnedHorizontalList javagochis={javagochis} link="myjavagochis/"/>
                         </Col>
 
                         <Col span={8}>
+                            <Text>Your items</Text>
                             <ItemsOwnedHorizontalList items={items} />
                         </Col>
                     </Row>
 
-                    <Button type="primary" style={{margin: 20}}><Link to="/profile/change">Change info</Link></Button>
+                    <Button type="primary" style={{margin: 20}}><Link to="/myprofile/change">Change info</Link></Button>
                 </div>
             );
         }
