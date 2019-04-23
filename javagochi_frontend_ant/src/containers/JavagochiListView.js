@@ -1,5 +1,7 @@
 import React from 'react';
-import axios from 'axios';
+import { connect } from "react-redux";
+import { getJcRaces } from "../store/actions/javagochi";
+
 import { Typography, Input } from 'antd';
 import JavagochiCells from '../components/JavagochiCells';
 import Loading from '../components/Loading';
@@ -11,68 +13,55 @@ const Search = Input.Search;
 
 class JavagochiList extends React.Component {
 
-    state = {
-        javagochis: [],
-        searched: []
+    constructor(props) {
+        super(props);
+        this.state = {
+            searchTerm: '',
+            currentlyDisplayed: []
+        }
+
+        this.onInputChange = this.onInputChange.bind(this);
+    }
+
+    onInputChange(e) {
+        const allJavagochis = this.props.javagochis;
+        let newlyDisplayed = allJavagochis.filter(javagochi => javagochi.race.includes(e.target.value));
+        this.setState({
+            searchTerm: e.target.value,
+            currentlyDisplayed: newlyDisplayed
+        });
     }
 
     componentDidMount() {
-        const token = localStorage.getItem('token');
-        console.log(token);
+        this.props.dispatch(getJcRaces());
+    }
 
-        if(token) {
-            axios.defaults.headers = {
-                "Content-Type": "application/json",
-                Authorization: `Token ${token}`
-            }
-        }
-        else {
-            axios.defaults.headers = {
-                "Content-Type": "application/json"
-            }
-        }
-
-        axios.get('http://localhost:8000/api/javagochi/market/')
-            .then(res => {
-                this.setState({
-                    javagochis: res.data,
-                    searched: res.data
-                });
-            })
+    componentWillReceiveProps(newProps) {
+        console.log(newProps.javagochis);
+        this.setState({
+            searchTerm: '',
+            currentlyDisplayed: newProps.javagochis
+        });
     }
 
     render() {
-        const javagochis = this.state.javagochis;
+        const javagochis = this.props.javagochis;
+        const loading = this.props.loading;
 
-        if(javagochis[0] !== undefined) {
+        if(!loading) {
             return (
                 <div>
                     <Search
                       placeholder="Search..."
 
-                      onChange={(e) => {
-                          this.setState({
-                              searched: []
-                          });
-                          var interesting = [];
-
-                          this.state.javagochis.forEach(function (javagochi) {
-                              if(javagochi.race.includes(e.target.value)) {
-                                  interesting.push(javagochi);
-                              }
-                          });
-
-                          this.setState( {
-                              searched: interesting
-                          })
-                      }}
+                      onChange={this.onInputChange}
 
                       className="test-class"
 
                       style={{ marginBottom: 15, width: 300 }}
                     />
                     <Title>All Javagochis</Title>
-                    <JavagochiCells data={this.state.searched} />
+                    <JavagochiCells data={this.state.currentlyDisplayed} />
                 </div>
             );
         }
@@ -84,4 +73,12 @@ class JavagochiList extends React.Component {
     }
 }
 
-export default JavagochiList;
+function mapStateToProps(state) {
+    return {
+        javagochis: state.jcReducer.jcRaces,
+        loading: state.jcReducer.fetchingRaces,
+        error: state.jcReducer.jcError
+    }
+}
+
+export default connect(mapStateToProps)(JavagochiList);

@@ -5,10 +5,10 @@ import * as serviceWorker from './serviceWorker';
 import { createStore, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import reducer from './store/reducers/auth';
+import rootReducer from './store/reducers/allReducers';
 
 const composeEnhances = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(reducer, composeEnhances(
+const store = createStore(rootReducer, composeEnhances(
     applyMiddleware(thunk)
 ));
 
