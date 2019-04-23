@@ -27,20 +27,6 @@ export const failJcRaces = (err) => {
 export const getJcRaces = () => {
     return dispatch => {
         dispatch(requestJcRaces());
-
-        const token = localStorage.getItem('token');
-
-        if(token) {
-            axios.defaults.headers = {
-                "Content-Type": "application/json",
-                Authorization: `Token ${token}`
-            }
-        }
-        else {
-            axios.defaults.headers = {
-                "Content-Type": "application/json"
-            }
-        }
         axios.get('http://localhost:8000/api/javagochi/market/')
         .then(res => {
             const javagochis = res.data;

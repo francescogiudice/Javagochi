@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import { getOwnedJcs } from "../store/actions/ownedJavagochi";
 import { connect } from 'react-redux';
 import { Typography, Input } from 'antd';
 import JavagochiOwnedCells from '../components/JavagochiOwnedCells';
@@ -10,70 +10,50 @@ const Search = Input.Search;
 
 class JavagochiOwnedList extends React.Component {
 
-    state = {
-        javagochis: [],
-        searched: []
-    };
-
-    config = {
-        headers: {
-            Authorization: `${localStorage.getItem('token')}`,
+    constructor(props) {
+        super(props);
+        this.state = {
+            searchTerm: '',
+            currentlyDisplayed: []
         }
-    };
 
-    data = {};
+        this.onInputChange = this.onInputChange.bind(this);
+    }
+
+    onInputChange(e) {
+        const allJavagochis = this.props.javagochis;
+        let newlyDisplayed = allJavagochis.filter(javagochi => javagochi.race.race.includes(e.target.value) || javagochi.nickname.includes(e.target.value));
+        this.setState({
+            searchTerm: e.target.value,
+            currentlyDisplayed: newlyDisplayed
+        });
+    }
 
     componentDidMount() {
-        const token = localStorage.getItem('token');
-        const user = localStorage.getItem('username');
+        this.props.dispatch(getOwnedJcs());
+    }
 
-        if(token) {
-            axios.defaults.headers = {
-                "Content-Type": "application/json",
-                Authorization: `Token ${token}`
-            }
-            axios.get(`http://localhost:8000/api/users/${user}/javagochis/`)
-                .then(res => {
-                    this.setState({
-                        javagochis: res.data,
-                        searched: res.data
-                    });
-                });
-        }
+    componentWillReceiveProps(newProps) {
+        this.setState({
+            searchTerm: '',
+            currentlyDisplayed: newProps.javagochis
+        });
     }
 
     render() {
-        const javagochis = this.state.javagochis;
+        const javagochis = this.props.javagochis;
 
-        if(javagochis[0] === undefined || javagochis.length > 0) {
+        if(!this.props.loading) {
             return (
                 <div>
                     <Search
                       placeholder="Search..."
-
-                      onChange={(e) => {
-                          this.setState({
-                              searched: []
-                          });
-                          var interesting = [];
-
-                          this.state.javagochis.forEach(function (javagochi) {
-                              if(javagochi.race.race.includes(e.target.value) || javagochi.nickname.includes(e.target.value)) {
-                                  interesting.push(javagochi);
-                              }
-                          });
-
-                          this.setState( {
-                              searched: interesting
-                          })
-                      }}
-
+                      onChange={this.onInputChange}
                       className="test-class"
-
                       style={{ marginBottom: 15, width: 300 }}
                     />
                     <Title>Your Javagochis</Title>
-                    <JavagochiOwnedCells data={this.state.searched} />
+                    <JavagochiOwnedCells data={this.state.currentlyDisplayed} />
                 </div>
             );
         }
@@ -87,7 +67,9 @@ class JavagochiOwnedList extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        token: state.token
+        token: state.token,
+        javagochis: state.ownedJcReducer.ownedJcs,
+        loading: state.ownedJcReducer.fetchingJavagochis
     }
 }
 

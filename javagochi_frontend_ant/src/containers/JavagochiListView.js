@@ -37,7 +37,6 @@ class JavagochiList extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        console.log(newProps.javagochis);
         this.setState({
             searchTerm: '',
             currentlyDisplayed: newProps.javagochis
@@ -53,11 +52,8 @@ class JavagochiList extends React.Component {
                 <div>
                     <Search
                       placeholder="Search..."
-
                       onChange={this.onInputChange}
-
                       className="test-class"
-
                       style={{ marginBottom: 15, width: 300 }}
                     />
                     <Title>All Javagochis</Title>
