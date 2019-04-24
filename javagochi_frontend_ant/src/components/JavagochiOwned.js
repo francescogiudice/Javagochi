@@ -26,6 +26,9 @@ const JavagochiOwned = (props) => {
                         title="Statistics"
                         bordered={false}
                     >
+
+                        <p>{"Type: " + javagochi.race.type}</p>
+
                         <Progress percent={(100 * javagochi.current_health) / javagochi.race.max_health} size="small" showInfo={false} />
                         <p>{"Health: " + javagochi.current_health + "/" + javagochi.race.max_health}</p>
 
