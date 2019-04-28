@@ -1,34 +1,19 @@
 import React from 'react';
-import axios from 'axios';
+import { getUserItemDetail } from '../store/actions/ownedItems';
+import { connect } from 'react-redux';
 
 import ItemDetail from '../components/ItemDetail';
 import Loading from '../components/Loading';
 
 class ItemOwnedDetailView extends React.Component {
 
-    state = {
-        item: {}
-    }
-
     componentDidMount() {
         const id = this.props.match.params.id;
-        const token = localStorage.getItem('token');
-
-        axios.defaults.headers = {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`
-        }
-
-        axios.get(`http://localhost:8000/api/items/owned/${id}/`)
-            .then(res => {
-                this.setState({
-                    item: res.data
-                });
-            });
+        this.props.dispatch(getUserItemDetail(id));
     }
 
     render() {
-        const item = this.state.item;
+        const item = this.props.item;
 
         if(item.item !== undefined) {
             return (
@@ -46,4 +31,11 @@ class ItemOwnedDetailView extends React.Component {
     }
 }
 
-export default ItemOwnedDetailView;
+const mapStateToProps = state => {
+    console.log(state);
+    return {
+        item: state.ownedItemsReducer.selectedItem
+    }
+}
+
+export default connect(mapStateToProps)(ItemOwnedDetailView);

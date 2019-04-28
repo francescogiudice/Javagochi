@@ -14,8 +14,7 @@ const ModalSelectRace = (props) => {
     const handleSelection = props.handleSelection;
     const races = props.races;
     const selectedRaceName = props.selectedRace;
-    const selectedRace = races.filter(function (race) { console.log(selectedRaceName); return race.race === selectedRaceName; })[0];
-    console.log(selectedRace);
+    const selectedRace = races.filter(function (race) { return race.race === selectedRaceName; })[0];
 
     return (
 

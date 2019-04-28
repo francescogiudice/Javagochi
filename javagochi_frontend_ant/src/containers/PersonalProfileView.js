@@ -1,8 +1,8 @@
 import React from 'react';
 import { getUser } from "../store/actions/auth";
 import { getOwnedJcs } from "../store/actions/ownedJavagochi";
+import { getUserItems } from '../store/actions/ownedItems';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import { Typography, Row, Col, Button } from 'antd';
 import { Link } from 'react-router-dom';
 
@@ -17,42 +17,22 @@ const { Text } = Typography;
 
 class PersonalProfileView extends React.Component {
 
-    state = {
-        items: [],
-        next_level: {}
-    }
-
     componentDidMount() {
         const user = localStorage.getItem('username');
         const token = localStorage.getItem('token');
         this.props.dispatch(getUser(user));
         this.props.dispatch(getOwnedJcs(user));
+        this.props.dispatch(getUserItems(user));
+    }
 
-        if(token) {
-            axios.defaults.headers = {
-                "Content-Type": "application/json",
-                Authorization: `Token ${token}`
-            }
-        }
-        else {
-            axios.defaults.headers = {
-                "Content-Type": "application/json"
-            }
-        }
-        if(user != null) {
-            axios.get(`http://localhost:8000/api/users/${user}/items/`)
-            .then(resItems => {
-                this.setState({
-                    items: resItems.data
-                });
-            });
-        }
+    onClick = (item) => {
+        this.props.history.push('/myitems/' + item.id)
     }
 
     render() {
         const user = this.props.user;
         const javagochis = this.props.javagochis;
-        const items = this.state.items;
+        const items = this.props.items;
         const nextUserLevel = this.props.nextUserLevel;
 
         if(user.username !== undefined){
@@ -68,7 +48,7 @@ class PersonalProfileView extends React.Component {
 
                         <Col span={8}>
                             <Text>Your items</Text>
-                            <ItemsOwnedHorizontalList items={items} />
+                            <ItemsOwnedHorizontalList items={items} onClick={this.onClick}/>
                         </Col>
                     </Row>
 
@@ -89,7 +69,8 @@ const mapStateToProps = state => {
         user: state.userReducer.user,
         nextUserLevel: state.userReducer.level,
         loading: state.userReducer.loading,
-        javagochis: state.ownedJcReducer.ownedJcs
+        javagochis: state.ownedJcReducer.ownedJcs,
+        items: state.ownedItemsReducer.items
     }
 }
 

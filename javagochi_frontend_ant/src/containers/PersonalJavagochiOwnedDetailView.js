@@ -1,8 +1,11 @@
 import React from 'react';
 import { Typography, Button } from 'antd';
-import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import { getOwnedJcById, useItem } from "../store/actions/ownedJavagochi";
+import { addTrade } from '../store/actions/trades';
+import { getJcRaces } from "../store/actions/javagochi";
+import { getUserItems } from '../store/actions/ownedItems';
+import { getAllUserTrades } from '../store/actions/trades';
 import { connect } from 'react-redux';
 
 import JavagochiOwned from '../components/JavagochiOwned';
@@ -18,14 +21,8 @@ const { Text } = Typography;
 class PersonalJavagochiOwnedDetail extends React.Component {
 
     state = {
-        javagochi: {},
-        items: [],
-        nextLevel: {},
-        allJavagochiRaces: [],
-        isTraded: false,
         selectedRaceToTrade: "",
         popupVisible: false,
-        message: "",
         showRaceModal: false
     }
 
@@ -44,8 +41,7 @@ class PersonalJavagochiOwnedDetail extends React.Component {
     handleOk = (e) => {
         this.setState({
             popupVisible: false,
-            showRaceModal: false,
-            isTraded: true
+            showRaceModal: false
         });
         this.props.history.push('/mytrades');
     }
@@ -65,34 +61,16 @@ class PersonalJavagochiOwnedDetail extends React.Component {
 
     handleUseItem = (item) => {
         const id = this.props.match.params.id;
-
         this.props.dispatch(useItem(item, id));
     }
 
     handleTradeStart = (e) => {
         e.preventDefault();
-        console.log("Initiating trade. Trading " + this.state.javagochi.nickname + " for a " + this.state.selectedRaceToTrade);
+        const offeredId = this.props.match.params.id;
+        const interestedInto = this.state.selectedRaceToTrade;
 
-        axios.post("http://localhost:8000/api/trades/add/", {
-          offered_id: this.state.javagochi.id,
-          interested_into: this.state.selectedRaceToTrade,
-        })
-        .then((res) => {
-            this.setState({
-                message: res.data,
-                isTraded: true
-            });
-            this.showPopupMessageModal();
-        })
-        .catch((err) => {
-            console.log(err.response);
-            if(err.response.data !== undefined) {
-                this.setState({
-                    message: err.response.data
-                });
-                this.showPopupMessageModal();
-            }
-        });
+        this.props.dispatch(addTrade(offeredId, interestedInto));
+        this.showPopupMessageModal();
     }
 
     componentDidMount() {
@@ -101,64 +79,26 @@ class PersonalJavagochiOwnedDetail extends React.Component {
         const token = localStorage.getItem('token');
 
         this.props.dispatch(getOwnedJcById(id));
-
-        axios.defaults.headers = {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`
-        }
-
-        axios.all([
-            axios.get(`http://localhost:8000/api/users/${user}/items/`),
-            axios.get(`http://localhost:8000/api/users/${user}/javagochis/`),
-            axios.get(`http://localhost:8000/api/users/${user}/trades/`),
-            axios.get('http://localhost:8000/api/javagochi/market/')
-
-        ])
-        .then(axios.spread((itemRes, ownedjcRes, tradeRes, allRes) => {
-            const isTraded = tradeRes.data.filter(function (trade) { return trade.offering.id === parseInt(id); }).length > 0;
-
-            this.setState({
-                items: itemRes.data,
-                isTraded: isTraded,
-                allJavagochiRaces: allRes.data,
-                owned_javagochis: ownedjcRes.data
-            });
-
-            const lvl = this.props.javagochi.current_level;
-            axios.get(`http://localhost:8000/api/javagochi/expmap/${lvl}/`)
-            .then(res => {
-                this.setState({
-                    nextLevel: res.data
-                })
-            })
-        }));
-    }
-
-    reloadJavagochi() {
-        const id = this.props.match.params.id;
-
-        axios.get(`http://localhost:8000/api/javagochi/owned/${id}/`)
-        .then(res => {
-            this.setState({
-                javagochi: res.data
-            });
-
-            const lvl = this.props.javagochi.current_level;
-            axios.get(`http://localhost:8000/api/javagochi/expmap/${lvl}/`)
-            .then(res => {
-                this.setState({
-                    nextLevel: res.data
-                })
-            })
-        });
+        this.props.dispatch(getJcRaces());
+        this.props.dispatch(getAllUserTrades(user));
+        this.props.dispatch(getUserItems(user));
     }
 
     render() {
         const javagochi = this.props.javagochi;
-        const items = this.state.items;
-        const nextLevel = this.state.nextLevel;
-        const allRaces = this.state.allJavagochiRaces;
+        const jcRaces = this.props.javagochis;
+        const items = this.props.items;
+        const nextLevel = this.props.nextLevel;
         const selectedRace = this.state.selectedRaceToTrade;
+        var isTraded = false;
+
+        if(this.props.userTrades.length > 0) {
+            const trades = this.props.userTrades;
+            isTraded = trades.filter(function (trade) { return trade.offering.id === parseInt(javagochi.id); }).length > 0;
+        }
+        else {
+            isTraded = false;
+        }
 
         if(javagochi.nickname !== undefined) {
             return (
@@ -168,7 +108,7 @@ class PersonalJavagochiOwnedDetail extends React.Component {
                       visible={this.state.popupVisible}
                       onCancel={this.handleCancel}
                       onOk={this.handleOk}
-                      text={this.state.message}
+                      text={this.props.message}
                     />
 
                     <ModalSelectRace
@@ -177,7 +117,7 @@ class PersonalJavagochiOwnedDetail extends React.Component {
                       onCancel={this.handleCancel}
                       handleAction={this.handleTradeStart}
                       handleSelection={this.handleSelection}
-                      races={allRaces}
+                      races={jcRaces}
                       selectedRace={selectedRace}
                     />
 
@@ -190,7 +130,7 @@ class PersonalJavagochiOwnedDetail extends React.Component {
                     />
 
                     {
-                        !this.state.isTraded ?
+                        !isTraded ?
                             <div style={{ marginTop: 15 }}>
                                 <Button type="primary" onClick={this.initiateTrade}>Choose a Javagochi to trade this</Button>
                             </div>
@@ -210,7 +150,12 @@ class PersonalJavagochiOwnedDetail extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        javagochi: state.ownedJcReducer.selectedJc
+        javagochi: state.ownedJcReducer.selectedJc,
+        nextLevel: state.ownedJcReducer.level,
+        javagochis: state.jcReducer.jcRaces,
+        items: state.ownedItemsReducer.items,
+        userTrades: state.tradesReducer.userTrades,
+        message: state.tradesReducer.message
     }
 }
 

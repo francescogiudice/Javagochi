@@ -4,6 +4,7 @@ import { updateObject } from '../utility';
 const initialState = {
     ownedJcs: [],
     selectedJc: {},
+    level: {},
     error: null,
     fetchingJavagochis: false
 }
@@ -33,16 +34,20 @@ const getOwnedJcsError = (state, action) => {
 }
 
 const getOwnedJcById = (state, action) => {
-    console.log(action);
     return updateObject(state, {
         selectedJc: action.payload.selectedJc
     })
 }
 
 const useItemError = (state, action) => {
-    console.log(action.error);
     return updateObject(state, {
         error: action.error
+    })
+}
+
+const getJcLevelInfo = (state, action) => {
+    return updateObject(state, {
+        level: action.payload.level
     })
 }
 
@@ -58,6 +63,8 @@ const ownedJcReducer = (state = initialState, action) => {
             return getOwnedJcById(state, action);
         case actionTypes.USE_ITEM_ERROR:
             return useItemError(state, action);
+        case actionTypes.GET_JC_LEVEL_INFO_END:
+            return getJcLevelInfo(state, action);
         default:
             return state;
 

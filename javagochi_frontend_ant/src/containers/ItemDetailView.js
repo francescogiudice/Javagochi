@@ -1,43 +1,27 @@
 import React from 'react';
-import axios from 'axios';
+import { getItemDetail } from '../store/actions/items';
+import { buyItem } from '../store/actions/items';
 import { Button, Form, InputNumber  } from 'antd';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import ItemDetail from '../components/ItemDetail';
 
 class ItDetail extends React.Component {
 
     state = {
-        item: {},
         buying: 1
     }
 
-    handleBuy(e) {
+    handleBuy = (e) => {
         e.preventDefault();
 
-        const token = localStorage.getItem('token');
-
-        if(token) {
-            axios.defaults.headers = {
-                "Content-Type": "application/json",
-                Authorization: `Token ${token}`
-            }
-        }
-        else {
-            axios.defaults.headers = {
-                "Content-Type": "application/json"
-            }
-        }
-        axios.post("http://localhost:8000/api/items/buy/", {
-            user: e.target[0].value,
-            item: e.target[1].value,
-            amount: e.target[2].value,
-        })
-        .catch((err) => {
-            console.log(err.message);
-        });
+        const user = e.target[0].value;
+        const item = e.target[1].value;
+        const amount = e.target[2].value;
+        this.props.dispatch(buyItem(user, item, amount));
     }
 
-    increaseAmount(value) {
+    increaseAmount = (value) => {
         this.setState({
             buying: value
         });
@@ -45,17 +29,11 @@ class ItDetail extends React.Component {
 
     componentDidMount() {
         const itemName = this.props.match.params.itemName;
-        axios.get(`http://localhost:8000/api/items/${itemName}`)
-            .then(res => {
-                this.setState({
-                    item: res.data
-                });
-            });
+        this.props.dispatch(getItemDetail(itemName));
     }
 
     render() {
-
-        const item = this.state.item;
+        const item = this.props.item;
 
         if(localStorage.getItem('username') !== undefined && localStorage.getItem('username') !== null) {
             return (
@@ -83,4 +61,10 @@ class ItDetail extends React.Component {
     }
 }
 
-export default ItDetail;
+const mapStateToProps = state => {
+    return {
+        item: state.itemsReducer.selectedItem
+    }
+}
+
+export default connect(mapStateToProps)(ItDetail);

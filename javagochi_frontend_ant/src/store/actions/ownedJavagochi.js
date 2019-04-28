@@ -1,5 +1,6 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
+import { getUserItems } from './ownedItems';
 
 export const requestOwnedJcs = () => {
     return {
@@ -48,9 +49,10 @@ export const getOwnedJcs = (user) => {
         })
         .catch(err => {
             dispatch(failJcRaces(err))
-        })
+        });
     }
 }
+
 export const requestOwnedJcById = () => {
     return {
         type: actionTypes.REQUEST_OWNED_JC_BY_ID
@@ -66,6 +68,56 @@ export const receivedOwnedJcById = (javagochi) => {
         }
     }
 }
+
+export const getJcLevelInfoStart = () => {
+    return {
+        type: actionTypes.GET_JC_LEVEL_INFO_START
+    }
+}
+
+export const getJcLevelInfoEnd = (level) => {
+    return {
+        type: actionTypes.GET_JC_LEVEL_INFO_END,
+        payload: {
+            level: level
+        }
+    }
+}
+
+export const getJcLevelInfoError = (err) => {
+    return {
+        type: actionTypes.GET_JC_LEVEL_INFO_ERROR,
+        error: err
+    }
+}
+
+export const getLevel = (lvl) => {
+    return dispatch => {
+        dispatch(getJcLevelInfoStart());
+
+        const token = localStorage.getItem('token');
+        if(token) {
+            axios.defaults.headers = {
+                "Content-Type": "application/json",
+                Authorization: `Token ${token}`
+            }
+        }
+        else {
+            axios.defaults.headers = {
+                "Content-Type": "application/json"
+            }
+        }
+        axios.get(`http://localhost:8000/api/javagochi/expmap/${lvl}/`)
+        .then(res => {
+            const level = res.data;
+            dispatch(getJcLevelInfoEnd(level));
+        })
+        .catch(err => {
+            dispatch(getJcLevelInfoError(err));
+        });
+    }
+}
+
 
 export const getOwnedJcById = (id) => {
     return dispatch => {
@@ -88,6 +140,7 @@ export const getOwnedJcById = (id) => {
         .then(res => {
             const javagochi = res.data;
             dispatch(receivedOwnedJcById(javagochi));
+            dispatch(getLevel(javagochi.current_level));
         })
         .catch(err => {
             dispatch(failJcRaces(err))
@@ -139,6 +192,7 @@ export const useItem = (item, jcId) => {
         .then(res => {
             dispatch(useItemEnd());
             dispatch(getOwnedJcById(jcId));
+            dispatch(getUserItems(item.owner.username));
         })
         .catch(err => {
             dispatch(useItemError(err))
