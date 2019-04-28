@@ -13,6 +13,7 @@ class JavagochiOwnedList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            javagaochis: [],
             searchTerm: '',
             currentlyDisplayed: []
         }
@@ -30,18 +31,20 @@ class JavagochiOwnedList extends React.Component {
     }
 
     componentDidMount() {
-        this.props.dispatch(getOwnedJcs());
+        const user = localStorage.getItem('username');
+        this.props.dispatch(getOwnedJcs(user));
     }
 
     componentWillReceiveProps(newProps) {
         this.setState({
+            javagochis: newProps.javagochis,
             searchTerm: '',
             currentlyDisplayed: newProps.javagochis
         });
     }
 
     render() {
-        const javagochis = this.props.javagochis;
+        const javagochis = this.state.javagochis;
 
         if(!this.props.loading) {
             return (
@@ -67,7 +70,6 @@ class JavagochiOwnedList extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        token: state.token,
         javagochis: state.ownedJcReducer.ownedJcs,
         loading: state.ownedJcReducer.fetchingJavagochis
     }

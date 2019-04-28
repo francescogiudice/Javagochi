@@ -1,7 +1,9 @@
 import React from 'react';
-import axios from 'axios';
 import { Typography, Button } from 'antd';
+import axios from 'axios';
 import { withRouter } from 'react-router-dom';
+import { getOwnedJcById, useItem } from "../store/actions/ownedJavagochi";
+import { connect } from 'react-redux';
 
 import JavagochiOwned from '../components/JavagochiOwned';
 import Loading from '../components/Loading';
@@ -62,23 +64,9 @@ class PersonalJavagochiOwnedDetail extends React.Component {
     }
 
     handleUseItem = (item) => {
-        const id = this.state.javagochi.id;
-        axios.put(`http://localhost:8000/api/javagochi/owned/${id}/useitem/`, {
-            item: item.item.name,
-            user: item.owner.username
-        })
-        .then((res) => {
-            this.reloadJavagochi();
-        })
-        .catch((err) => {
-            console.log(err.response);
-            if(err.response.data !== undefined) {
-                this.setState({
-                    message: err.response.data
-                });
-                this.showPopupMessageModal();
-            }
-        });
+        const id = this.props.match.params.id;
+
+        this.props.dispatch(useItem(item, id));
     }
 
     handleTradeStart = (e) => {
@@ -112,31 +100,31 @@ class PersonalJavagochiOwnedDetail extends React.Component {
         const user = localStorage.getItem('username');
         const token = localStorage.getItem('token');
 
+        this.props.dispatch(getOwnedJcById(id));
+
         axios.defaults.headers = {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
 
         axios.all([
-            axios.get(`http://localhost:8000/api/javagochi/owned/${id}/`),
             axios.get(`http://localhost:8000/api/users/${user}/items/`),
             axios.get(`http://localhost:8000/api/users/${user}/javagochis/`),
             axios.get(`http://localhost:8000/api/users/${user}/trades/`),
             axios.get('http://localhost:8000/api/javagochi/market/')
 
         ])
-        .then(axios.spread((jcRes, itemRes, ownedjcRes, tradeRes, allRes) => {
+        .then(axios.spread((itemRes, ownedjcRes, tradeRes, allRes) => {
             const isTraded = tradeRes.data.filter(function (trade) { return trade.offering.id === parseInt(id); }).length > 0;
 
             this.setState({
-                javagochi: jcRes.data,
                 items: itemRes.data,
                 isTraded: isTraded,
                 allJavagochiRaces: allRes.data,
                 owned_javagochis: ownedjcRes.data
             });
 
-            const lvl = this.state.javagochi.current_level;
+            const lvl = this.props.javagochi.current_level;
             axios.get(`http://localhost:8000/api/javagochi/expmap/${lvl}/`)
             .then(res => {
                 this.setState({
@@ -155,7 +143,7 @@ class PersonalJavagochiOwnedDetail extends React.Component {
                 javagochi: res.data
             });
 
-            const lvl = this.state.javagochi.current_level;
+            const lvl = this.props.javagochi.current_level;
             axios.get(`http://localhost:8000/api/javagochi/expmap/${lvl}/`)
             .then(res => {
                 this.setState({
@@ -166,12 +154,11 @@ class PersonalJavagochiOwnedDetail extends React.Component {
     }
 
     render() {
-        const javagochi = this.state.javagochi;
+        const javagochi = this.props.javagochi;
         const items = this.state.items;
         const nextLevel = this.state.nextLevel;
         const allRaces = this.state.allJavagochiRaces;
         const selectedRace = this.state.selectedRaceToTrade;
-        console.log(selectedRace);
 
         if(javagochi.nickname !== undefined) {
             return (
@@ -221,4 +208,10 @@ class PersonalJavagochiOwnedDetail extends React.Component {
     }
 }
 
-export default withRouter(PersonalJavagochiOwnedDetail);
+const mapStateToProps = state => {
+    return {
+        javagochi: state.ownedJcReducer.selectedJc
+    }
+}
+
+export default connect(mapStateToProps)(PersonalJavagochiOwnedDetail);

@@ -124,3 +124,102 @@ export const authCheckState = () => {
         }
     }
 }
+
+export const getUserInfoStart = () => {
+    return {
+        type: actionTypes.GET_USER_INFO_START
+    }
+}
+
+export const getUserInfoEnd = (user) => {
+    return {
+        type: actionTypes.GET_USER_INFO_END,
+        payload: {
+            user: user
+        }
+    }
+}
+
+export const getUserInfoError = (err) => {
+    return {
+        type: actionTypes.GET_USER_INFO_ERROR,
+        error: err
+    }
+}
+
+export const getLevelInfoStart = () => {
+    return {
+        type: actionTypes.GET_USER_LEVEL_INFO_START
+    }
+}
+
+export const getLevelInfoEnd = (level) => {
+    return {
+        type: actionTypes.GET_USER_LEVEL_INFO_END,
+        payload: {
+            level: level
+        }
+    }
+}
+
+export const getLevelInfoError = (err) => {
+    return {
+        type: actionTypes.GET_USER_LEVEL_INFO_ERROR,
+        error: err
+    }
+}
+
+export const getLevel = (lvl) => {
+    return dispatch => {
+        dispatch(getLevelInfoStart());
+
+        const token = localStorage.getItem('token');
+        if(token) {
+            axios.defaults.headers = {
+                "Content-Type": "application/json",
+                Authorization: `Token ${token}`
+            }
+        }
+        else {
+            axios.defaults.headers = {
+                "Content-Type": "application/json"
+            }
+        }
+        axios.get(`http://localhost:8000/api/users/expmap/${lvl}/`)
+        .then(res => {
+            const level = res.data;
+            dispatch(getLevelInfoEnd(level));
+        })
+        .catch(err => {
+            dispatch(getLevelInfoError(err));
+        });
+    }
+}
+
+export const getUser = (username) => {
+    return dispatch => {
+        dispatch(getUserInfoStart());
+        const token = localStorage.getItem('token');
+
+        if(token) {
+            axios.defaults.headers = {
+                "Content-Type": "application/json",
+                Authorization: `Token ${token}`
+            }
+        }
+        else {
+            axios.defaults.headers = {
+                "Content-Type": "application/json"
+            }
+        }
+        axios.get(`http://localhost:8000/api/users/${username}/info/`)
+        .then(res => {
+            const user = res.data;
+            dispatch(getUserInfoEnd(user));
+            dispatch(getLevel(user.level));
+        })
+        .catch(err => {
+            dispatch(getUserInfoError(err));
+        })
+    }
+}

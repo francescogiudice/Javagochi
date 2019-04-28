@@ -1,4 +1,7 @@
 import React from 'react';
+import { getUser } from "../store/actions/auth";
+import { getOwnedJcs } from "../store/actions/ownedJavagochi";
+import { connect } from 'react-redux';
 import axios from 'axios';
 import { Typography, Row, Col, Button } from 'antd';
 import { Link } from 'react-router-dom';
@@ -15,8 +18,6 @@ const { Text } = Typography;
 class PersonalProfileView extends React.Component {
 
     state = {
-        user: {},
-        javagochis: [],
         items: [],
         next_level: {}
     }
@@ -24,6 +25,8 @@ class PersonalProfileView extends React.Component {
     componentDidMount() {
         const user = localStorage.getItem('username');
         const token = localStorage.getItem('token');
+        this.props.dispatch(getUser(user));
+        this.props.dispatch(getOwnedJcs(user));
 
         if(token) {
             axios.defaults.headers = {
@@ -37,40 +40,25 @@ class PersonalProfileView extends React.Component {
             }
         }
         if(user != null) {
-            axios.all([
-                axios.get(`http://localhost:8000/api/users/${user}/info/`),
-                axios.get(`http://localhost:8000/api/users/${user}/javagochis/`),
-                axios.get(`http://localhost:8000/api/users/${user}/items/`)
-            ])
-            .then(axios.spread((resInfo, resJc, resItems) => {
+            axios.get(`http://localhost:8000/api/users/${user}/items/`)
+            .then(resItems => {
                 this.setState({
-                    user: resInfo.data,
-                    javagochis: resJc.data,
                     items: resItems.data
                 });
-
-                const lvl = resInfo.data.level;
-                axios.get(`http://localhost:8000/api/users/expmap/${lvl}/`)
-                .then(res => {
-                    this.setState({
-                        next_level: res.data
-                    })
-                });
-            }));
+            });
         }
     }
 
     render() {
-        const user = this.state.user;
-        const javagochis = this.state.javagochis;
+        const user = this.props.user;
+        const javagochis = this.props.javagochis;
         const items = this.state.items;
-        const next_level = this.state.next_level;
+        const nextUserLevel = this.props.nextUserLevel;
 
-        if(user.username !== undefined && next_level.exp_for_next_level !== undefined){
-            console.log("Inside if: " + user.username);
+        if(user.username !== undefined){
             return (
                 <div style={{ padding: '30px' }}>
-                    <Profile user={user} next_level={next_level}/>
+                    <Profile user={user} next_level={nextUserLevel}/>
 
                     <Row gutter={16}>
                         <Col span={8}>
@@ -89,7 +77,6 @@ class PersonalProfileView extends React.Component {
             );
         }
         else {
-            console.log("Inside else: " + user.username);
             return (
                 <Loading />
             );
@@ -97,4 +84,13 @@ class PersonalProfileView extends React.Component {
     }
 }
 
-export default PersonalProfileView;
+const mapStateToProps = state => {
+    return {
+        user: state.userReducer.user,
+        nextUserLevel: state.userReducer.level,
+        loading: state.userReducer.loading,
+        javagochis: state.ownedJcReducer.ownedJcs
+    }
+}
+
+export default connect(mapStateToProps)(PersonalProfileView);
