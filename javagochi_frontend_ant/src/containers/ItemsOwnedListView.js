@@ -1,5 +1,6 @@
 import React from 'react';
-import axios from 'axios';
+import { getUserItems } from '../store/actions/ownedItems';
+import { connect } from 'react-redux';
 import { Typography, Input } from 'antd';
 import ItemOwnedCells from '../components/ItemOwnedCells';
 import Loading from '../components/Loading';
@@ -9,61 +10,54 @@ const Search = Input.Search;
 
 class ItemsOwnedList extends React.Component {
 
-    state = {
-        items: [],
-        searched: []
+    constructor(props) {
+        super(props);
+        this.state = {
+            searchTerm: '',
+            currentlyDisplayed: []
+        }
+
+        this.onInputChange = this.onInputChange.bind(this);
+    }
+
+    onInputChange(e) {
+        const allOwnedItems = this.props.ownedItems;
+        let newlyDisplayed = allOwnedItems.filter(item => item.name.includes(e.target.value));
+        this.setState({
+            searchTerm: e.target.value,
+            currentlyDisplayed: newlyDisplayed
+        });
     }
 
     componentDidMount() {
         const user = localStorage.getItem('username');
-        const token = localStorage.getItem('token');
+        this.props.dispatch(getUserItems(user));
+    }
 
-        axios.defaults.headers = {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`
-        }
-
-        axios.get(`http://localhost:8000/api/users/${user}/items/`)
-            .then(res => {
-                this.setState({
-                    items: res.data,
-                    searched: res.data
-                });
-            });
+    componentWillReceiveProps(newProps) {
+        this.setState({
+            searchTerm: '',
+            currentlyDisplayed: newProps.items
+        });
     }
 
     render() {
-        const items = this.state.items;
+        const items = this.props.items;
+        console.log(items);
+        const loading = this.props.loading;
+        console.log(loading);
 
-        if(items[0] === undefined || items.length > 0) {
+        if(!loading) {
             return (
                 <div>
                     <Search
                       placeholder="Search..."
-
-                      onChange={(e) => {
-                          this.setState({
-                              searched: []
-                          });
-                          var interesting = [];
-
-                          this.state.items.forEach(function (item) {
-                              if(item.item.name.includes(e.target.value)) {
-                                  interesting.push(item);
-                              }
-                          });
-
-                          this.setState( {
-                              searched: interesting
-                          })
-                      }}
-
+                      onChange={this.onInputChange}
                       className="test-class"
-
                       style={{ marginBottom: 15, width: 300 }}
                     />
                     <Title>Your items</Title>
-                    <ItemOwnedCells data={this.state.searched} />
+                    <ItemOwnedCells data={this.state.currentlyDisplayed} />
                 </div>
             );
         }
@@ -75,4 +69,12 @@ class ItemsOwnedList extends React.Component {
     }
 }
 
-export default ItemsOwnedList;
+const mapStateToProps = state => {
+    return {
+        items: state.ownedItemsReducer.items,
+        loading: state.ownedItemsReducer.fetchingItems
+    }
+}
+
+
+export default connect(mapStateToProps)(ItemsOwnedList);

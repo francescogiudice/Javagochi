@@ -29,12 +29,12 @@ class UserList extends React.Component {
         }
 
         axios.get('http://localhost:8000/api/users/all')
-            .then(res => {
-                this.setState({
-                    users: res.data,
-                    searched: res.data
-                });
-            })
+        .then(res => {
+            this.setState({
+                users: res.data,
+                searched: res.data
+            });
+        });
     }
 
     render() {

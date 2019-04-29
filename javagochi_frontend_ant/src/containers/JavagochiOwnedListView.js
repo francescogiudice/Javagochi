@@ -13,7 +13,6 @@ class JavagochiOwnedList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            javagaochis: [],
             searchTerm: '',
             currentlyDisplayed: []
         }
@@ -37,14 +36,13 @@ class JavagochiOwnedList extends React.Component {
 
     componentWillReceiveProps(newProps) {
         this.setState({
-            javagochis: newProps.javagochis,
             searchTerm: '',
             currentlyDisplayed: newProps.javagochis
         });
     }
 
     render() {
-        const javagochis = this.state.javagochis;
+        const javagochis = this.props.javagochis;
 
         if(!this.props.loading) {
             return (

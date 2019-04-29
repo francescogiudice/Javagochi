@@ -38,7 +38,7 @@ const getJcRaceSuccess = (state, action) => {
         jcError: null,
         fetchingRace: false,
         selectedRace: action.payload.selectedRace
-    })
+    });
 }
 
 const getJcRacesError = (state, action) => {

@@ -32,7 +32,6 @@ class ItemOwnedDetailView extends React.Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state);
     return {
         item: state.ownedItemsReducer.selectedItem
     }

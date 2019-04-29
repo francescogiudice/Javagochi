@@ -30,7 +30,7 @@ const getItemsSuccess = (state, action) => {
         error: null,
         fetchingItems: false,
         items: action.payload.items
-    })
+    });
 }
 
 const getItemSuccess = (state, action) => {

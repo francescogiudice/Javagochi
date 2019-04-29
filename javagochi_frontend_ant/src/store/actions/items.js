@@ -22,7 +22,7 @@ export const itemBuyStart = () => {
 // TODO: consider adding a received at parameter
 export const receiveItems = (items) => {
     return {
-        type: actionTypes.RECEIVED_JC_RACES,
+        type: actionTypes.RECEIVED_ITEMS,
         payload: {
             items: items
         }
