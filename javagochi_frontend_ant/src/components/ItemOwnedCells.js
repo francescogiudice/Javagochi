@@ -24,7 +24,7 @@ const ItemOwnedCells = (props) => {
             renderItem={item => (
                 <List.Item key={item.item.name}>
 
-                    <a href={"/myitems/" + item.id}>
+                    <a href={"/myprofile/myitems/" + item.id}>
                         <OwnedItemCard item={item} />
                     </a>
                 </List.Item>

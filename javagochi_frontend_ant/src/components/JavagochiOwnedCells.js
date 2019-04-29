@@ -24,7 +24,7 @@ const JavagochiOwnedCells = (props) => {
             renderItem={item => (
                 <List.Item key={item.race}>
 
-                    <a href={"/myjavagochis/" + item.id}>
+                    <a href={"/myprofile/myjavagochis/" + item.id}>
                         <JavagochiOwnedCard javagochi={item}/>
                     </a>
                 </List.Item>

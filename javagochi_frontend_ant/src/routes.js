@@ -24,24 +24,26 @@ import Signup from './containers/Signup';
 const BaseRouter = () => (
     <div>
         <Route exact path='/' component={Intro} />
+        <Route exact path='/market' component={JavagochiList} />
+        <Route exact path='/itemsmarket' component={ItemList} />
+        <Route exact path='/detail/:jcRace/' component={JavagochiDetail} />
+        <Route exact path='/itemdetail/:itemName/' component={ItDetail} />
+        <Route exact path='/login/' component={WrappedNormalLoginForm} />
+        <Route exact path='/signup/' component={Signup} />
+
+        <Route exact path='/myprofile' component={PersonalProfileView} />
+        <Route exact path='/myprofile/change' component={ChangeProfileView} />
+        <Route exact path='/myprofile/myjavagochis' component={JavagochiOwnedList} />
+        <Route exact path='/myprofile/myjavagochis/:id/' component={PersonalJavagochiOwnedDetail} />
+        <Route exact path='/myprofile/myitems' component={ItemsOwnedList} />
+        <Route exact path='/myprofile/myitems/:id/' component={ItemOwnedDetailView} />
+        <Route exact path='/myprofile/mytrades/' component={UserTradesView} />
+
         <Route exact path='/profile/:username/' component={UserDetailView} />
         <Route exact path='/profile/:username/javagochi/:id' component={UserJavagochiOwnedDetail} />
         <Route exact path='/users/' component={UserListView} />
-        <Route exact path='/market' component={JavagochiList} />
-        <Route exact path='/itemsmarket' component={ItemList} />
-        <Route exact path='/myprofile' component={PersonalProfileView} />
-        <Route exact path='/myprofile/change' component={ChangeProfileView} />
-        <Route exact path='/myjavagochis' component={JavagochiOwnedList} />
-        <Route exact path='/myjavagochis/:id/' component={PersonalJavagochiOwnedDetail} />
-        <Route exact path='/detail/:jcRace/' component={JavagochiDetail} />
-        <Route exact path='/myitems' component={ItemsOwnedList} />
-        <Route exact path='/myitems/:id/' component={ItemOwnedDetailView} />
-        <Route exact path='/itemdetail/:itemName/' component={ItDetail} />
         <Route exact path='/trades' component={TradeOffersView} />
         <Route exact path='/trades/:tradeId/' component={TradeOfferDetail} />
-        <Route exact path='/mytrades/' component={UserTradesView} />
-        <Route exact path='/login/' component={WrappedNormalLoginForm} />
-        <Route exact path='/signup/' component={Signup} />
     </div>
 );
 

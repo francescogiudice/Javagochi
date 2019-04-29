@@ -43,7 +43,7 @@ class PersonalJavagochiOwnedDetail extends React.Component {
             popupVisible: false,
             showRaceModal: false
         });
-        this.props.history.push('/mytrades');
+        this.props.history.push('/myprofile/mytrades');
     }
 
     handleCancel = (e) => {

@@ -8,6 +8,7 @@ const JavagochiOwnedHorizontalList = (props) => {
 
     const javagochis = props.javagochis;
     const link_start = props.link;
+    console.log(link_start);
 
     return (
         <List
@@ -16,7 +17,7 @@ const JavagochiOwnedHorizontalList = (props) => {
           dataSource={javagochis}
           renderItem={javagochi => (
                 <div className="hoverme">
-                    <Link to={'/' + link_start + javagochi.id}>
+                    <Link to={link_start + javagochi.id}>
                         <List.Item>
                         <List.Item.Meta
                           avatar={<Avatar src={javagochi.race.image} />}
