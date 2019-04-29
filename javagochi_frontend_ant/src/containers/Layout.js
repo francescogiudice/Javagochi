@@ -63,9 +63,9 @@ class CustomLayout extends React.Component {
                                 this.props.isAuthenticated ?
                                   <SubMenu key="sub1" title={<span><Icon type="user" />{localStorage.getItem('username')}</span>}>
                                       <Menu.Item key="10"><Link to="/myprofile/">Your Profile</Link></Menu.Item>
-                                      <Menu.Item key="20"><Link to="/myjavagochis">Your Javagochis</Link></Menu.Item>
-                                      <Menu.Item key="30"><Link to="/myitems">Your Items</Link></Menu.Item>
-                                      <Menu.Item key="40"><Link to="/mytrades">Your Trades</Link></Menu.Item>
+                                      <Menu.Item key="20"><Link to="/myprofile/myjavagochis">Your Javagochis</Link></Menu.Item>
+                                      <Menu.Item key="30"><Link to="/myprofile/myitems">Your Items</Link></Menu.Item>
+                                      <Menu.Item key="40"><Link to="/myprofile/mytrades">Your Trades</Link></Menu.Item>
                                   </SubMenu>
                                 :
                                   <SubMenu key="sub1" title={<span><Icon type="user" />Start now!</span>}>
