@@ -44,7 +44,6 @@ class ItemList extends React.Component {
 
     render() {
         const items = this.props.items;
-        console.log(items);
 
         if(items[0] !== undefined) {
             return (

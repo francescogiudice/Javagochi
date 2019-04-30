@@ -39,7 +39,6 @@ class UserJavagochiOwnedDetail extends React.Component {
     }
 
     handleSelect = (val) => {
-        console.log(val);
         this.setState({
             challenger_javagochi_id: val
         })

@@ -18,7 +18,6 @@ class TradeOfferDetail extends React.Component {
     }
 
     handleSelect = (val) => {
-        console.log(val);
         this.setState({
             selected_jc_trade: val
         })
@@ -28,12 +27,10 @@ class TradeOfferDetail extends React.Component {
         e.preventDefault();
 
         const id = this.state.trade.id;
-        console.log(this.state.selected_jc_trade);
         axios.put(`http://localhost:8000/api/trades/${id}/conclude/`, {
             id_trader: this.state.selected_jc_trade
         })
         .then((res) => {
-            console.log(res.data);
             this.props.history.push('/myjavagochis');
         })
         .catch((err) => {
@@ -45,13 +42,11 @@ class TradeOfferDetail extends React.Component {
         const id = this.state.trade.id;
         axios.delete(`http://localhost:8000/api/trades/${id}/close`)
         .then((res) => {
-            console.log(res);
             this.props.history.push('/mytrades');
         })
         .catch((err) => {
             console.log(err);
         })
-        console.log("Removing trade");
     }
 
     componentDidMount() {

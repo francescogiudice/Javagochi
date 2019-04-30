@@ -8,7 +8,6 @@ const JavagochiOwnedHorizontalList = (props) => {
 
     const javagochis = props.javagochis;
     const link_start = props.link;
-    console.log(link_start);
 
     return (
         <List

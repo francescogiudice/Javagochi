@@ -43,9 +43,7 @@ class ItemsOwnedList extends React.Component {
 
     render() {
         const items = this.props.items;
-        console.log(items);
         const loading = this.props.loading;
-        console.log(loading);
 
         if(!loading) {
             return (

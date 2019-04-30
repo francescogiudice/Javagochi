@@ -21,7 +21,6 @@ class UserDetailView extends React.Component {
     }
 
     clickedItem = (item) => {
-        console.log(item);
     }
 
     componentDidMount() {

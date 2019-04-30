@@ -32,7 +32,6 @@ const getItemsSuccess = (state, action) => {
 }
 
 const getItemSuccess = (state, action) => {
-    console.log(action);
     return updateObject(state, {
         error: null,
         fetchingItem: false,
