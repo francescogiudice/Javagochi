@@ -1,5 +1,8 @@
 import React from 'react';
-import axios from 'axios';
+import { getUser } from "../store/actions/auth";
+import { getOwnedJcs } from "../store/actions/ownedJavagochi";
+import { getUserItems } from '../store/actions/ownedItems';
+import { connect } from 'react-redux';
 import { Typography, Row, Col } from 'antd';
 
 import Profile from '../components/Profile';
@@ -13,59 +16,26 @@ const { Text } = Typography;
 
 class UserDetailView extends React.Component {
 
-    state = {
-        user: {},
-        javagochis: [],
-        items: [],
-        next_level: {}
-    }
+  componentDidMount() {
+      const user = this.props.match.params.username;
+      this.props.dispatch(getUser(user));
+      this.props.dispatch(getOwnedJcs(user));
+      this.props.dispatch(getUserItems(user));
+  }
 
-    clickedItem = (item) => {
-    }
-
-    componentDidMount() {
-        const user = this.props.match.params.username;
-        const token = localStorage.getItem('token');
-
-        if(user != null) {
-            axios.defaults.headers = {
-                "Content-Type": "application/json",
-                Authorization: `Token ${token}`
-            }
-
-            axios.all([
-                axios.get(`http://localhost:8000/api/users/${user}/info/`),
-                axios.get(`http://localhost:8000/api/users/${user}/javagochis/`),
-                axios.get(`http://localhost:8000/api/users/${user}/items/`)
-            ])
-            .then(axios.spread((resInfo, resJc, resItems) => {
-                this.setState({
-                    user: resInfo.data,
-                    javagochis: resJc.data,
-                    items: resItems.data
-                });
-
-                const lvl = resInfo.data.level;
-                axios.get(`http://localhost:8000/api/users/expmap/${lvl}/`)
-                .then(res => {
-                    this.setState({
-                        next_level: res.data
-                    })
-                });
-            }));
-        }
+    onClick = (item) => {
     }
 
     render() {
-        const user = this.state.user;
-        const javagochis = this.state.javagochis;
-        const items = this.state.items;
-        const next_level = this.state.next_level;
+        const user = this.props.user;
+        const javagochis = this.props.javagochis;
+        const items = this.props.items;
+        const nextUserLevel = this.props.nextUserLevel;
 
-        if(user.username !== undefined && next_level.exp_for_next_level !== undefined){
+        if(user.username !== undefined){
             return (
                 <div style={{ padding: '30px' }}>
-                    <Profile user={user} next_level={next_level}/>
+                    <Profile user={user} next_level={nextUserLevel}/>
 
                     <Row gutter={16}>
                         <Col span={8}>
@@ -75,13 +45,13 @@ class UserDetailView extends React.Component {
 
                         <Col span={8}>
                             <Text>{user.username + " items"}</Text>
-                            <ItemsOwnedHorizontalList items={items} onClick={this.clickedItem}/>
+                            <ItemsOwnedHorizontalList items={items} onClick={this.onClick}/>
                         </Col>
                     </Row>
                 </div>
             );
         }
-            else {
+        else {
             return (
                 <Loading />
             );
@@ -89,4 +59,14 @@ class UserDetailView extends React.Component {
     }
 }
 
-export default UserDetailView;
+const mapStateToProps = state => {
+    return {
+        user: state.userReducer.user,
+        nextUserLevel: state.userReducer.level,
+        loading: state.userReducer.loading,
+        javagochis: state.ownedJcReducer.ownedJcs,
+        items: state.ownedItemsReducer.items
+    }
+}
+
+export default connect(mapStateToProps)(UserDetailView);

@@ -25,7 +25,6 @@ const getOwnedJcsSuccess = (state, action) => {
 }
 
 const getOwnedJcsError = (state, action) => {
-    console.log(action.error);
     return updateObject(state, {
         error: action.error,
         fetchingJavagochis: false,

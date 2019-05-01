@@ -21,7 +21,6 @@ class ItemsOwnedList extends React.Component {
     }
 
     onInputChange(e) {
-        console.log(this.props);
         const allOwnedItems = this.props.items;
         let newlyDisplayed = allOwnedItems.filter(item => item.item.name.includes(e.target.value));
         this.setState({
