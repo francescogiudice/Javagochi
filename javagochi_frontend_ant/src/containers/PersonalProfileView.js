@@ -19,7 +19,6 @@ class PersonalProfileView extends React.Component {
 
     componentDidMount() {
         const user = localStorage.getItem('username');
-        const token = localStorage.getItem('token');
         this.props.dispatch(getUser(user));
         this.props.dispatch(getOwnedJcs(user));
         this.props.dispatch(getUserItems(user));

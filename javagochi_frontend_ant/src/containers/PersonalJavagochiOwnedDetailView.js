@@ -76,7 +76,6 @@ class PersonalJavagochiOwnedDetail extends React.Component {
     componentDidMount() {
         const id = this.props.match.params.id;
         const user = localStorage.getItem('username');
-        const token = localStorage.getItem('token');
 
         this.props.dispatch(getOwnedJcById(id));
         this.props.dispatch(getJcRaces());

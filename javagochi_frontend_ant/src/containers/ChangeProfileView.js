@@ -1,5 +1,6 @@
 import React from 'react';
-import axios from 'axios';
+import { getUser } from "../store/actions/auth";
+import { connect } from 'react-redux';
 import { Typography, Spin } from 'antd';
 
 import ChangeProfileForm from '../components/ChangeProfile';
@@ -8,32 +9,15 @@ const { Title } = Typography;
 
 class ChangeProfileView extends React.Component {
 
-    state = {
-        user: {}
-    }
-
     componentDidMount() {
         const user = localStorage.getItem('username');
-        const token = localStorage.getItem('token');
-
-        if(user != null) {
-            axios.defaults.headers = {
-                "Content-Type": "application/json",
-                Authorization: `Token ${token}`
-            }
-            axios.get(`http://localhost:8000/api/users/${user}/info/`)
-            .then(res => {
-                this.setState({
-                    user: res.data
-                });
-            });
-        }
+        this.props.dispatch(getUser(user));
     }
 
     render() {
-        if(this.state.user.username !== undefined){
+        if(this.props.user.username !== undefined){
             return (
-                <ChangeProfileForm data={this.state} />
+                <ChangeProfileForm data={this.props} />
             );
         }
         else {
@@ -47,4 +31,11 @@ class ChangeProfileView extends React.Component {
     }
 }
 
-export default ChangeProfileView;
+const mapStateToProps = state => {
+    return {
+        user: state.userReducer.user,
+        loading: state.userReducer.loading
+    }
+}
+
+export default connect(mapStateToProps)(ChangeProfileView);
