@@ -32,7 +32,7 @@ const getAllTradesEnd = (state, action) => {
 const getUserTradesEnd = (state, action) => {
     return updateObject(state, {
         userTrades: action.payload.userTrades,
-        fetchingUserTrades: true,
+        fetchingUserTrades: false,
     });
 }
 

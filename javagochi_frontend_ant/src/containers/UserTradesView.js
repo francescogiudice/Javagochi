@@ -43,22 +43,29 @@ class TradeOffersView extends React.Component {
         });
     }
 
-    render() {
-        const trades = this.props.trades;
-        const loading = this.props.loading;
+        render() {
+            const trades = this.props.trades;
+            const loading = this.props.loading;
 
-        return (
-            <div>
-                <Search
-                  placeholder="Search..."
-                  onChange={this.onInputChange}
-                  className="test-class"
-                  style={{ marginBottom: 15, width: 300 }}
-                />
-                <Title>Your trades</Title>
-                <TradeCells data={this.state.currentlyDisplayed} />
-            </div>
-        );
+            if(!loading) {
+                return (
+                    <div>
+                        <Search
+                          placeholder="Search..."
+                          onChange={this.onInputChange}
+                          className="test-class"
+                          style={{ marginBottom: 15, width: 300 }}
+                        />
+                        <Title>Your trades</Title>
+                        <TradeCells data={this.state.currentlyDisplayed} />
+                    </div>
+                );
+          }
+          else {
+              return (
+                  <Loading />
+              )
+          }
     }
 }
 
