@@ -45,7 +45,7 @@ export const userTradesFail = (err) => {
     }
 }
 
-export const getAllTrades = () => {
+export const getAllTrades = (user) => {
     return dispatch => {
         dispatch(requestAllTrades());
 
@@ -63,7 +63,7 @@ export const getAllTrades = () => {
             }
         }
 
-        axios.get('http://localhost:8000/api/trades/all/')
+        axios.get(`http://localhost:8000/api/trades/${user}/all/`)
         .then(res => {
             const trades = res.data;
             dispatch(receiveAllTrades(trades));

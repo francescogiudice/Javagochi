@@ -1,82 +1,77 @@
 import React from 'react';
-import axios from 'axios';
+import { getAllTrades } from '../store/actions/trades';
+import { connect } from 'react-redux';
 import TradeCells from '../components/TradeCells';
 import { Typography, Input } from 'antd';
+import Loading from '../components/Loading';
 
 const { Title } = Typography;
 const Search = Input.Search;
 
 class TradeOffersView extends React.Component {
 
-    state = {
-        trades: [],
-        searched: []
-    }
+  constructor(props) {
+      super(props);
+      this.state = {
+          searchTerm: '',
+          currentlyDisplayed: []
+      }
 
-    componentDidMount() {
-        const token = localStorage.getItem('token');
+      this.onInputChange = this.onInputChange.bind(this);
+  }
 
-        if(token) {
-            axios.defaults.headers = {
-                "Content-Type": "application/json",
-                Authorization: `Token ${token}`
-            }
-        }
-        else {
-            axios.defaults.headers = {
-                "Content-Type": "application/json"
-            }
-        }
+  onInputChange(e) {
+      const allTrades = this.props.trades;
+      let newlyDisplayed = allTrades.filter(trade => trade.offering.race.race.includes(e.target.value));
+      this.setState({
+          searchTerm: e.target.value,
+          currentlyDisplayed: newlyDisplayed
+      });
+  }
 
-        axios.get('http://localhost:8000/api/trades/all/')
-            .then(res => {
-                var t = res.data.filter(function(trade) {
-                    return trade.offering.owner.username !== localStorage.getItem("username");
-                });
-                this.setState({
-                    trades: t,
-                    searched: t
-                });
-            })
-    }
+  componentDidMount() {
+    const user = localStorage.getItem('username');
+    this.props.dispatch(getAllTrades(user));
+  }
+
+  componentWillReceiveProps(newProps) {
+      this.setState({
+          searchTerm: '',
+          currentlyDisplayed: newProps.trades
+      });
+  }
 
     render() {
-        return (
-            <div>
-                <Search
-                  placeholder="Search..."
+        const trades = this.props.trades;
+        const loading = this.props.loading;
 
-                  onChange={(e) => {
-                      this.setState({
-                          searched: []
-                      });
-                      var interesting = [];
-
-                      this.state.trades.forEach(function (trade) {
-                          const jc_offered_nick = trade.offering.nickname;
-                          const jc_offered_race = trade.offering.race.race;
-                          const offerer = trade.offering.owner.username;
-                          const text = e.target.value;
-
-                          if(jc_offered_nick.includes(text) || jc_offered_race.includes(text) || offerer.includes(text)) {
-                              interesting.push(trade);
-                          }
-                      });
-
-                      this.setState( {
-                          searched: interesting
-                      })
-                  }}
-
-                  className="test-class"
-
-                  style={{ marginBottom: 15, width: 300 }}
-                />
-                <Title>All trades happening</Title>
-                <TradeCells data={this.state.searched} />
-            </div>
-        );
+        if(!loading) {
+            return (
+                <div>
+                    <Search
+                      placeholder="Search..."
+                      onChange={this.onInputChange}
+                      className="test-class"
+                      style={{ marginBottom: 15, width: 300 }}
+                    />
+                    <Title>Your trades</Title>
+                    <TradeCells data={this.state.currentlyDisplayed} />
+                </div>
+            );
+        }
+        else {
+            return (
+                <Loading />
+            )
+        }
     }
 }
 
-export default TradeOffersView;
+const mapStateToProps = state => {
+    return {
+      trades: state.tradesReducer.allTrades,
+      loading: state.tradesReducer.fetchingAllTrades
+    }
+}
+
+export default connect(mapStateToProps)(TradeOffersView);
