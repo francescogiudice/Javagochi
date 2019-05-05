@@ -4,7 +4,7 @@ This is an university project based on the 90s' game 'Tamagotchi'. Players will 
 ### Installing
 Download the project and install the required software:
 
-- Django (and required modules): `pip install django djangorestframework django-allauth django-cors-headers`
+- Django (and required modules): `pip install django djangorestframework django-allauth django-cors-headers django-rest-auth`
 - Node and npm: `apt install nodejs npm`
 - React: `npm install react react-dom react-scripts`
 
