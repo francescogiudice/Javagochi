@@ -223,3 +223,46 @@ export const getUser = (username) => {
         })
     }
 }
+
+export const requestUsers = () => {
+    return {
+        type: actionTypes.REQUEST_USERS
+    }
+}
+
+export const receiveUsers = (users) => {
+    return {
+        type: actionTypes.RECEIVE_USERS,
+        payload: {
+            users: users
+        }
+    }
+}
+
+export const failUsers = (err) => {
+    return {
+        type: actionTypes.FAIL_USERS,
+        error: err
+    }
+}
+
+export const getUsers = (user) => {
+    return dispatch => {
+        dispatch(requestUsers());
+
+        const token = localStorage.getItem('token');
+        axios.defaults.headers = {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`
+        }
+
+        axios.get(`http://localhost:8000/api/users/${user}/all`)
+        .then(res => {
+            const users = res.data;
+            dispatch(receiveUsers(users));
+        })
+        .catch(err => {
+            dispatch(failUsers(err));
+        })
+    }
+}

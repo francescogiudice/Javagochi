@@ -42,7 +42,7 @@ class JavagochiOwnedList extends React.Component {
     }
 
     render() {
-        const javagochis = this.props.javagochis;
+        // const javagochis = this.props.javagochis;
 
         if(!this.props.loading) {
             return (

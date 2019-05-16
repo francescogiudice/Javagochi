@@ -2,18 +2,20 @@ import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../utility';
 
 const initialState = {
+    users: [],
     user: {},
     level: {},
     token: null,
     error: null,
-    loading: false
+    loading: false,
+    fetchingUsers: false
 }
 
 const authStart = (state, action) => {
     return updateObject(state, {
         error: null,
         loading: true
-    })
+    });
 }
 
 const authSuccess = (state, action) => {
@@ -21,20 +23,20 @@ const authSuccess = (state, action) => {
         token: action.token,
         error: null,
         loading: false
-    })
+    });
 }
 
 const authFail = (state, action) => {
     return updateObject(state, {
         error: action.error,
         loading: false
-    })
+    });
 }
 
 const authLogout = (state, action) => {
     return updateObject(state, {
         token: null,
-    })
+    });
 }
 
 const getUserInfo = (state, action) => {
@@ -46,7 +48,30 @@ const getUserInfo = (state, action) => {
 const getLevelInfo = (state, action) => {
     return updateObject(state, {
         level: action.payload.level
-    })
+    });
+}
+
+const requestUsers = (state, action) => {
+    return updateObject(state, {
+        error: null,
+        fetchingUsers: true
+    });
+}
+
+const receiveUsers = (state, action) => {
+    return updateObject(state, {
+        error: null,
+        fetchingUsers: false,
+        users: action.payload.users
+    });
+}
+
+const failUsers = (state, action) => {
+    return updateObject(state, {
+        error: action.error,
+        fetchingUsers: false,
+        users: []
+    });
 }
 
 const userReducer = (state = initialState, action) => {
@@ -65,6 +90,12 @@ const userReducer = (state = initialState, action) => {
             return getUserInfo(state, action);
         case actionTypes.GET_USER_LEVEL_INFO_END:
             return getLevelInfo(state, action);
+        case actionTypes.REQUEST_USERS:
+            return requestUsers(state, action);
+        case actionTypes.RECEIVE_USERS:
+            return receiveUsers(state, action);
+        case actionTypes.FAIL_USERS:
+            return failUsers(state, action);
         default:
             return state;
 

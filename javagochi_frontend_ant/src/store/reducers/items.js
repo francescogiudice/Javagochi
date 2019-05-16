@@ -15,14 +15,14 @@ const getItemsStart = (state, action) => {
     return updateObject(state, {
         error: null,
         fetchingItems: true
-    })
+    });
 }
 
 const getItemStart = (state, action) => {
     return updateObject(state, {
         error: null,
         fetchingItem: true
-    })
+    });
 }
 
 const getItemsSuccess = (state, action) => {
@@ -38,7 +38,7 @@ const getItemSuccess = (state, action) => {
         error: null,
         fetchingItem: false,
         selectedItem: action.payload.selectedItem
-    })
+    });
 }
 
 const getItemsError = (state, action) => {
@@ -46,7 +46,7 @@ const getItemsError = (state, action) => {
         error: action.error,
         fetchingItems: false,
         items: []
-    })
+    });
 }
 
 const getItemError = (state, action) => {

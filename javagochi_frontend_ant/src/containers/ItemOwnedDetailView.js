@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import ItemDetail from '../components/ItemDetail';
 import Loading from '../components/Loading';
 
-class ItemOwnedDetailView extends React.Component {
+class ItemOwnedDetail extends React.Component {
 
     componentDidMount() {
         const id = this.props.match.params.id;
@@ -37,4 +37,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(ItemOwnedDetailView);
+export default connect(mapStateToProps)(ItemOwnedDetail);

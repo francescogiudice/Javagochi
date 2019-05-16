@@ -1,74 +1,77 @@
 import React from 'react';
-import axios from 'axios';
+import { getUsers } from '../store/actions/auth';
+import { connect } from 'react-redux';
 import UserCells from '../components/UserCells';
 import { Typography, Input } from 'antd';
+import Loading from '../components/Loading';
 
 const { Title } = Typography;
 const Search = Input.Search;
 
 class UserList extends React.Component {
 
-    state = {
-        users: [],
-        searched: []
+    constructor(props) {
+        super(props);
+        this.state = {
+            searchTerm: '',
+            currentlyDisplayed: []
+        }
+
+        this.onInputChange = this.onInputChange.bind(this);
+    }
+
+    onInputChange(e) {
+        const allUsers = this.props.users;
+        let newlyDisplayed = allUsers.filter(user => user.username.includes(e.target.value));
+        this.setState({
+            searchTerm: e.target.value,
+            currentlyDisplayed: newlyDisplayed
+        });
     }
 
     componentDidMount() {
-        const token = localStorage.getItem('token');
+        const user = localStorage.getItem('username');
+        this.props.dispatch(getUsers(user));
+    }
 
-        if(token) {
-            axios.defaults.headers = {
-                "Content-Type": "application/json",
-                Authorization: `Token ${token}`
-            }
-        }
-        else {
-            axios.defaults.headers = {
-                "Content-Type": "application/json"
-            }
-        }
-
-        axios.get('http://localhost:8000/api/users/all')
-        .then(res => {
-            this.setState({
-                users: res.data,
-                searched: res.data
-            });
+    componentWillReceiveProps(newProps) {
+        this.setState({
+            searchTerm: '',
+            currentlyDisplayed: newProps.users
         });
     }
 
     render() {
-        return (
-            <div>
-                <Search
-                  placeholder="Search..."
+        // const users = this.props.users;
+        const loading = this.props.loading;
 
-                  onChange={(e) => {
-                      this.setState({
-                          searched: []
-                      });
-                      var interesting = [];
-
-                      this.state.users.forEach(function (user) {
-                          if(user.username.includes(e.target.value)) {
-                              interesting.push(user);
-                          }
-                      });
-
-                      this.setState( {
-                          searched: interesting
-                      })
-                  }}
-
-                  className="test-class"
-
-                  style={{ marginBottom: 15, width: 300 }}
-                />
-                <Title>Other people</Title>
-                <UserCells data={this.state.searched} />
-            </div>
-        );
+        if(!loading) {
+            return (
+                <div>
+                    <Search
+                      placeholder="Search..."
+                      onChange={this.onInputChange}
+                      className="test-class"
+                      style={{ marginBottom: 15, width: 300 }}
+                    />
+                    <Title>Other people</Title>
+                    <UserCells data={this.state.currentlyDisplayed} />
+                </div>
+            );
+        }
+        else {
+            return (
+                <Loading />
+            )
+        }
     }
 }
 
-export default UserList;
+const mapStateToProps = state => {
+    return {
+        users: state.userReducer.users,
+        loading: state.userReducer.fetchingUsers
+    }
+}
+
+export default connect(mapStateToProps)(UserList);

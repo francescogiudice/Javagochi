@@ -42,7 +42,7 @@ class ItemsOwnedList extends React.Component {
     }
 
     render() {
-        const items = this.props.items;
+        // const items = this.props.items;
         const loading = this.props.loading;
 
         if(!loading) {
@@ -73,6 +73,5 @@ const mapStateToProps = state => {
         loading: state.ownedItemsReducer.fetchingItems
     }
 }
-
 
 export default connect(mapStateToProps)(ItemsOwnedList);

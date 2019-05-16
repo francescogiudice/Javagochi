@@ -9,6 +9,9 @@ export const GET_USER_LEVEL_INFO_ERROR = 'GET_USER_LEVEL_INFO_ERROR';
 export const GET_USER_INFO_START = 'GET_USER_INFO_START';
 export const GET_USER_INFO_END = 'GET_USER_INFO_END';
 export const GET_USER_INFO_ERROR = 'GET_USER_INFO_ERROR';
+export const REQUEST_USERS = 'REQUEST_USERS';
+export const RECEIVE_USERS = 'RECEIVE_USERS';
+export const FAIL_USERS = 'FAIL_USERS';
 
 // Actions regarding the Javagochi races
 export const REQUEST_JC_RACES = 'REQUEST_JC_RACES';

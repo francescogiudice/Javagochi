@@ -14,7 +14,7 @@ import '../styles/Intro.css';
 
 const { Text } = Typography;
 
-class UserDetailView extends React.Component {
+class UserDetail extends React.Component {
 
   componentDidMount() {
       const user = this.props.match.params.username;
@@ -69,4 +69,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(UserDetailView);
+export default connect(mapStateToProps)(UserDetail);

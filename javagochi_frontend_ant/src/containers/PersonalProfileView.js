@@ -15,7 +15,7 @@ import '../styles/Intro.css';
 
 const { Text } = Typography;
 
-class PersonalProfileView extends React.Component {
+class PersonalProfile extends React.Component {
 
     componentDidMount() {
         const user = localStorage.getItem('username');
@@ -73,4 +73,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(PersonalProfileView);
+export default connect(mapStateToProps)(PersonalProfile);

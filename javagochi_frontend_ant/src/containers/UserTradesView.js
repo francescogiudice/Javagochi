@@ -9,8 +9,7 @@ const { Title } = Typography;
 
 const Search = Input.Search;
 
-class TradeOffersView extends React.Component {
-
+class TradeOffers extends React.Component {
 
     constructor(props) {
         super(props);
@@ -32,8 +31,8 @@ class TradeOffersView extends React.Component {
     }
 
     componentDidMount() {
-      const user = localStorage.getItem('username');
-      this.props.dispatch(getAllUserTrades(user));
+        const user = localStorage.getItem('username');
+        this.props.dispatch(getAllUserTrades(user));
     }
 
     componentWillReceiveProps(newProps) {
@@ -44,7 +43,7 @@ class TradeOffersView extends React.Component {
     }
 
     render() {
-        const trades = this.props.trades;
+        // const trades = this.props.trades;
         const loading = this.props.loading;
 
         if(!loading) {
@@ -71,9 +70,9 @@ class TradeOffersView extends React.Component {
 
 const mapStateToProps = state => {
     return {
-      trades: state.tradesReducer.userTrades,
-      loading: state.tradesReducer.fetchingUserTrades
+        trades: state.tradesReducer.userTrades,
+        loading: state.tradesReducer.fetchingUserTrades
     }
 }
 
-export default connect(mapStateToProps)(TradeOffersView);
+export default connect(mapStateToProps)(TradeOffers);

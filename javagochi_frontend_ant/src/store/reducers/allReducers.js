@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
-import jcReducer from './javagochi.js';
+import jcReducer from './javagochi';
 import ownedJcReducer from './ownedJavagochi';
-import userReducer from './auth.js';
+import userReducer from './auth';
 import tradesReducer from './trades';
 import itemsReducer from './items';
 import ownedItemsReducer from './ownedItems';

@@ -44,7 +44,7 @@ class JavagochiList extends React.Component {
     }
 
     render() {
-        const javagochis = this.props.javagochis;
+        // const javagochis = this.props.javagochis;
         const loading = this.props.loading;
 
         if(!loading) {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, Button } from 'antd';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 import { getOwnedJcById, useItem } from "../store/actions/ownedJavagochi";
 import { addTrade } from '../store/actions/trades';
 import { getJcRaces } from "../store/actions/javagochi";

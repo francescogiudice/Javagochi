@@ -8,41 +8,41 @@ import Loading from '../components/Loading';
 const { Title } = Typography;
 const Search = Input.Search;
 
-class TradeOffersView extends React.Component {
+class TradeOffers extends React.Component {
 
-  constructor(props) {
-      super(props);
-      this.state = {
-          searchTerm: '',
-          currentlyDisplayed: []
-      }
+    constructor(props) {
+        super(props);
+        this.state = {
+            searchTerm: '',
+            currentlyDisplayed: []
+        }
 
-      this.onInputChange = this.onInputChange.bind(this);
-  }
+        this.onInputChange = this.onInputChange.bind(this);
+    }
 
-  onInputChange(e) {
-      const allTrades = this.props.trades;
-      let newlyDisplayed = allTrades.filter(trade => trade.offering.race.race.includes(e.target.value));
-      this.setState({
-          searchTerm: e.target.value,
-          currentlyDisplayed: newlyDisplayed
-      });
-  }
+    onInputChange(e) {
+        const allTrades = this.props.trades;
+        let newlyDisplayed = allTrades.filter(trade => trade.offering.race.race.includes(e.target.value));
+        this.setState({
+            searchTerm: e.target.value,
+            currentlyDisplayed: newlyDisplayed
+        });
+    }
 
-  componentDidMount() {
-    const user = localStorage.getItem('username');
-    this.props.dispatch(getAllTrades(user));
-  }
+    componentDidMount() {
+      const user = localStorage.getItem('username');
+      this.props.dispatch(getAllTrades(user));
+    }
 
-  componentWillReceiveProps(newProps) {
-      this.setState({
-          searchTerm: '',
-          currentlyDisplayed: newProps.trades
-      });
-  }
+    componentWillReceiveProps(newProps) {
+        this.setState({
+            searchTerm: '',
+            currentlyDisplayed: newProps.trades
+        });
+    }
 
     render() {
-        const trades = this.props.trades;
+        //const trades = this.props.trades;
         const loading = this.props.loading;
 
         if(!loading) {
@@ -54,7 +54,7 @@ class TradeOffersView extends React.Component {
                       className="test-class"
                       style={{ marginBottom: 15, width: 300 }}
                     />
-                    <Title>Your trades</Title>
+                    <Title>All trades happening</Title>
                     <TradeCells data={this.state.currentlyDisplayed} />
                 </div>
             );
@@ -69,9 +69,9 @@ class TradeOffersView extends React.Component {
 
 const mapStateToProps = state => {
     return {
-      trades: state.tradesReducer.allTrades,
-      loading: state.tradesReducer.fetchingAllTrades
+        trades: state.tradesReducer.allTrades,
+        loading: state.tradesReducer.fetchingAllTrades
     }
 }
 
-export default connect(mapStateToProps)(TradeOffersView);
+export default connect(mapStateToProps)(TradeOffers);

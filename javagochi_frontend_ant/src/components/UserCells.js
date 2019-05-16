@@ -7,10 +7,6 @@ const { Meta } = Card;
 
 const UserCells = (props) => {
 
-    var users = props.data.filter(function(user) {
-      return user.username !== localStorage.getItem("username");
-    });
-
     return (
         <List
             grid={{
@@ -24,7 +20,7 @@ const UserCells = (props) => {
                     pageSize: 12,
                 }
             }
-            dataSource = {users}
+            dataSource = {props.data}
 
             renderItem={item => (
                   <List.Item key={item.username}>

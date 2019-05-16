@@ -1,14 +1,15 @@
 import React from 'react'
-import { Typography, Row, Form, Button, Select, Modal } from 'antd';
+import { Row, Form, Button, Select, Modal } from 'antd';
+// import { Typography } from 'antd';
 import JavagochiRace from './JavagochiRace';
 
-const { Text } = Typography;
+// const { Text } = Typography;
 const Option = Select.Option
 
 const ModalSelectRace = (props) => {
 
     const visible = props.visible;
-    const onOk = props.onOk;
+    // const onOk = props.onOk;
     const onCancel = props.onCancel;
     const handleAction = props.handleAction;
     const handleSelection = props.handleSelection;
